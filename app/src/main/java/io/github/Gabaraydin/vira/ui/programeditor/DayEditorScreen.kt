@@ -35,7 +35,7 @@ import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.domain.model.ProgramDay
 
 @Composable
-fun DayEditorRoute(viewModel: DayEditorViewModel = hiltViewModel()) {
+fun DayEditorRoute(onOpenExercises: (Long) -> Unit, viewModel: DayEditorViewModel = hiltViewModel()) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val newDayLabel = stringResource(R.string.day_editor_new_day_default_name)
 
@@ -47,6 +47,7 @@ fun DayEditorRoute(viewModel: DayEditorViewModel = hiltViewModel()) {
         onRenameDay = viewModel::renameDay,
         onMoveUp = viewModel::moveUp,
         onMoveDown = viewModel::moveDown,
+        onOpenExercises = onOpenExercises,
     )
 }
 
@@ -59,6 +60,7 @@ private fun DayEditorScreen(
     onRenameDay: (ProgramDay, String) -> Unit,
     onMoveUp: (ProgramDay) -> Unit,
     onMoveDown: (ProgramDay) -> Unit,
+    onOpenExercises: (Long) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
         Text(
@@ -80,7 +82,10 @@ private fun DayEditorScreen(
                 items(uiState.days, key = { it.id }) { day ->
                     val isFirst = day.position == 0
                     val isLast = day.position == uiState.days.size - 1
-                    DayRow(day, isFirst, isLast, onRemoveDay, onToggleRest, onRenameDay, onMoveUp, onMoveDown)
+                    DayRow(
+                        day, isFirst, isLast, onRemoveDay, onToggleRest, onRenameDay, onMoveUp, onMoveDown,
+                        onOpenExercises = { onOpenExercises(day.id) },
+                    )
                 }
             }
         }
@@ -97,6 +102,7 @@ private fun DayRow(
     onRenameDay: (ProgramDay, String) -> Unit,
     onMoveUp: (ProgramDay) -> Unit,
     onMoveDown: (ProgramDay) -> Unit,
+    onOpenExercises: () -> Unit,
 ) {
     var name by remember(day.id) { mutableStateOf(day.name) }
 
@@ -133,8 +139,13 @@ private fun DayRow(
                     }
                 }
             }
-            TextButton(onClick = { onRemoveDay(day) }) {
-                Text(stringResource(R.string.day_editor_delete_day))
+            Row {
+                TextButton(onClick = onOpenExercises) {
+                    Text(stringResource(R.string.day_editor_open_exercises))
+                }
+                TextButton(onClick = { onRemoveDay(day) }) {
+                    Text(stringResource(R.string.day_editor_delete_day))
+                }
             }
         }
     }

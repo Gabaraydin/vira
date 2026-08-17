@@ -33,6 +33,8 @@ class ProgramRepository @Inject constructor(
     fun observeDaysForProgram(programId: Long): Flow<List<ProgramDay>> =
         programDayDao.observeForProgram(programId).map { it.map(ProgramDayEntity::toDomain) }
 
+    suspend fun getDay(programDayId: Long): ProgramDay? = programDayDao.getById(programDayId)?.toDomain()
+
     fun observeExercisesForDay(programDayId: Long): Flow<List<ProgramDayExercise>> =
         programDayExerciseDao.observeForDay(programDayId).map { it.map(ProgramDayExerciseEntity::toDomain) }
 
@@ -193,6 +195,49 @@ class ProgramRepository @Inject constructor(
             programDayExerciseDao.update(entry.copy(supersetGroupId = null, supersetOrder = null))
         }
     }
+
+    // Deletes, re-compacts positions, and — since a superset group of one exercise makes
+    // no sense — ungroups whatever's left of the entry's old group if that drops it below 2.
+    suspend fun removeExerciseFromDay(entryId: Long) = database.withTransaction {
+        val entry = programDayExerciseDao.getById(entryId) ?: return@withTransaction
+        programDayExerciseDao.delete(entry)
+        val remaining = programDayExerciseDao.getForDay(entry.programDayId).sortedBy { it.position }
+        remaining.forEachIndexed { index, e ->
+            if (e.position != index) programDayExerciseDao.update(e.copy(position = index))
+        }
+        if (entry.supersetGroupId != null) {
+            val stillInGroup = programDayExerciseDao.getForDay(entry.programDayId)
+                .filter { it.supersetGroupId == entry.supersetGroupId }
+            if (stillInGroup.size < 2) {
+                stillInGroup.forEach {
+                    programDayExerciseDao.update(it.copy(supersetGroupId = null, supersetOrder = null))
+                }
+            }
+        }
+    }
+
+    // Sets, rep range, weight, rest override — anything that isn't position/grouping.
+    suspend fun updateExerciseTarget(entry: ProgramDayExercise) {
+        programDayExerciseDao.update(entry.toEntity())
+    }
+
+    // Same two-phase out-of-range approach as reorderDays, for the same reason.
+    suspend fun reorderExercisesInDay(programDayId: Long, orderedEntryIds: List<Long>) = database.withTransaction {
+        val entries = programDayExerciseDao.getForDay(programDayId)
+        require(orderedEntryIds.toSet() == entries.map { it.id }.toSet()) {
+            "orderedEntryIds must contain exactly the day's current exercises"
+        }
+        val byId = entries.associateBy { it.id }
+        val outOfRangeOffset = entries.size
+
+        orderedEntryIds.forEach { entryId ->
+            val entry = byId.getValue(entryId)
+            programDayExerciseDao.update(entry.copy(position = entry.position + outOfRangeOffset))
+        }
+        orderedEntryIds.forEachIndexed { index, entryId ->
+            programDayExerciseDao.update(byId.getValue(entryId).copy(position = index))
+        }
+    }
 }
 
 private fun ProgramEntity.toDomain(): Program = Program(
@@ -222,6 +267,20 @@ private fun ProgramDay.toEntity(): ProgramDayEntity = ProgramDayEntity(
 )
 
 private fun ProgramDayExerciseEntity.toDomain(): ProgramDayExercise = ProgramDayExercise(
+    id = id,
+    programDayId = programDayId,
+    exerciseId = exerciseId,
+    position = position,
+    supersetGroupId = supersetGroupId,
+    supersetOrder = supersetOrder,
+    targetSets = targetSets,
+    targetRepsMin = targetRepsMin,
+    targetRepsMax = targetRepsMax,
+    targetWeightKg = targetWeightKg,
+    restSecOverride = restSecOverride,
+)
+
+private fun ProgramDayExercise.toEntity(): ProgramDayExerciseEntity = ProgramDayExerciseEntity(
     id = id,
     programDayId = programDayId,
     exerciseId = exerciseId,

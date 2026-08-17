@@ -58,10 +58,27 @@
     <string name="day_editor_move_down">Move down</string>
     <string name="day_editor_delete_day">Delete day</string>
     <string name="day_editor_empty">No days yet — add the first one.</string>
+    <string name="day_editor_open_exercises">Exercises</string>
 
     <string name="dialog_confirm">Confirm</string>
     <string name="dialog_cancel">Cancel</string>
 
     <string name="program_switch_explanation_title">Switching programs</string>
     <string name="program_switch_explanation_body">Your training history stays exactly as it is — switching the active program only changes what Today shows next. Nothing gets deleted.</string>
+
+    <string name="day_exercises_title">%1$s — Exercises</string>
+    <string name="day_exercises_add">Add exercise</string>
+    <string name="day_exercises_empty">No exercises planned yet.</string>
+    <string name="day_exercises_remove">Remove</string>
+    <string name="day_exercises_sets_label">Sets</string>
+    <string name="day_exercises_reps_min_label">Min reps</string>
+    <string name="day_exercises_reps_max_label">Max reps</string>
+    <string name="day_exercises_group_superset">Group into superset (%1$d selected)</string>
+    <string name="day_exercises_ungroup_superset">Ungroup</string>
+    <string name="day_exercises_reorder_disabled_grouped">Ungroup before reordering</string>
+
+    <string name="exercise_picker_title">Add exercises</string>
+    <string name="exercise_picker_search_placeholder">Search</string>
+    <string name="exercise_picker_empty">No exercises match</string>
+    <string name="exercise_picker_add_selected">Add %1$d</string>
 </resources>

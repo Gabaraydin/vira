@@ -235,6 +235,65 @@ class ProgramRepositoryTest {
         val sourceDays = database.programDayDao().getForProgram(sourceId)
         assertEquals(2, sourceDays.size)
     }
+
+    // --- removeExerciseFromDay / reorderExercisesInDay ---
+
+    @Test
+    fun removingAnExerciseCompactsRemainingPositions() = runTest {
+        val programId = repository.createProgram("Program", createdAt = 1)
+        val dayId = repository.addDay(programId, "Push", isRest = false, libraryCategory = null)
+        val exerciseIds = seedExercises(3)
+        val entryIds = exerciseIds.map { exId ->
+            repository.addExerciseToDay(
+                dayId, exId, targetSets = 3, targetRepsMin = null, targetRepsMax = null,
+                targetWeightKg = null, restSecOverride = null,
+            )
+        }
+        repository.removeExerciseFromDay(entryIds[1])
+
+        val remaining = database.programDayExerciseDao().getForDay(dayId).sortedBy { it.position }
+        assertEquals(2, remaining.size)
+        assertEquals(listOf(0, 1), remaining.map { it.position })
+    }
+
+    @Test
+    fun removingAGroupedExerciseUngroupsTheLoneSurvivor() = runTest {
+        val programId = repository.createProgram("Program", createdAt = 1)
+        val dayId = repository.addDay(programId, "Push", isRest = false, libraryCategory = null)
+        val entryIds = seedExercises(2).map { exId ->
+            repository.addExerciseToDay(
+                dayId, exId, targetSets = 3, targetRepsMin = null, targetRepsMax = null,
+                targetWeightKg = null, restSecOverride = null,
+            )
+        }
+        repository.groupIntoSuperset(dayId, entryIds)
+
+        repository.removeExerciseFromDay(entryIds[0])
+
+        val survivor = requireNotNull(database.programDayExerciseDao().getById(entryIds[1]))
+        assertEquals(null, survivor.supersetGroupId)
+        assertEquals(null, survivor.supersetOrder)
+    }
+
+    @Test
+    fun reorderingExercisesAssignsPositionsByTheGivenOrder() = runTest {
+        val programId = repository.createProgram("Program", createdAt = 1)
+        val dayId = repository.addDay(programId, "Push", isRest = false, libraryCategory = null)
+        val exerciseIds = seedExercises(3)
+        val entryIds = exerciseIds.map { exId ->
+            repository.addExerciseToDay(
+                dayId, exId, targetSets = 3, targetRepsMin = null, targetRepsMax = null,
+                targetWeightKg = null, restSecOverride = null,
+            )
+        }
+
+        repository.reorderExercisesInDay(dayId, listOf(entryIds[2], entryIds[0], entryIds[1]))
+
+        val byId = database.programDayExerciseDao().getForDay(dayId).associateBy { it.id }
+        assertEquals(0, byId.getValue(entryIds[2]).position)
+        assertEquals(1, byId.getValue(entryIds[0]).position)
+        assertEquals(2, byId.getValue(entryIds[1]).position)
+    }
 }
 
 private fun ProgramDayEntity.toDomain() = ProgramDay(
