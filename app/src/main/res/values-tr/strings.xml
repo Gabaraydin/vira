@@ -54,6 +54,19 @@
     <string name="rest_timer_notification_title">%1$s dinlenmesi</string>
     <string name="rest_timer_notification_remaining">%1$02d:%2$02d kaldı</string>
 
+    <string name="workout_summary_duration_label">Süre</string>
+    <string name="workout_summary_volume_label">Toplam hacim</string>
+    <string name="workout_summary_volume_format">%1$s kg</string>
+    <string name="workout_summary_set_count_label">Set sayısı</string>
+    <string name="workout_summary_new_pr_title">Yeni Rekorlar</string>
+    <string name="workout_summary_previous_label">Geçen sefer: %1$s</string>
+    <string name="workout_summary_done">Tamam</string>
+
+    <string name="workout_detail_note_label">Not</string>
+    <string name="workout_detail_delete">Antrenmanı sil</string>
+    <string name="workout_detail_delete_confirm_title">Bu antrenman silinsin mi?</string>
+    <string name="workout_detail_delete_confirm_body">Bu işlem geri alınamaz.</string>
+
     <string name="placeholder_coming_soon">Yakında</string>
 
     <string name="top_bar_program">Program</string>

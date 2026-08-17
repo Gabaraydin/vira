@@ -48,4 +48,12 @@ interface WorkoutDao {
             "ORDER BY date, startedAt",
     )
     fun observeCompletedForCycle(): Flow<List<WorkoutEntity>>
+
+    // The Workout Summary screen's "same day, previous cycle" comparison: the most recent
+    // *other* finished workout for this exact program day.
+    @Query(
+        "SELECT * FROM workout WHERE programDayId = :programDayId AND id != :excludeWorkoutId " +
+            "AND finishedAt IS NOT NULL ORDER BY date DESC, startedAt DESC LIMIT 1",
+    )
+    suspend fun getPreviousWorkoutForDay(programDayId: Long, excludeWorkoutId: Long): WorkoutEntity?
 }

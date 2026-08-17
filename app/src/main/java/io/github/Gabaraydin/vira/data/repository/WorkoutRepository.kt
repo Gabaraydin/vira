@@ -36,6 +36,23 @@ class WorkoutRepository @Inject constructor(
     fun observeSetsForWorkout(workoutId: Long): Flow<List<WorkoutSet>> =
         workoutSetDao.observeForWorkout(workoutId).map { it.map(WorkoutSetEntity::toDomain) }
 
+    suspend fun getSetsForWorkout(workoutId: Long): List<WorkoutSet> =
+        workoutSetDao.getForWorkout(workoutId).map { it.toDomain() }
+
+    // The most recent other finished workout for the same program day — the Workout
+    // Summary screen's "same day, previous cycle" comparison. Null for an ad-hoc workout
+    // (no programDayId) or the first time this day has ever been done.
+    suspend fun getPreviousWorkoutForDay(programDayId: Long, excludeWorkoutId: Long): Workout? =
+        workoutDao.getPreviousWorkoutForDay(programDayId, excludeWorkoutId)?.toDomain()
+
+    suspend fun getPriorCompletedSets(exerciseId: Long, excludeWorkoutId: Long): List<WorkoutSet> =
+        workoutSetDao.getPriorCompletedSets(exerciseId, excludeWorkoutId).map { it.toDomain() }
+
+    suspend fun updateNote(workoutId: Long, note: String?) {
+        val workout = requireNotNull(workoutDao.getById(workoutId)) { "No workout with id $workoutId" }
+        workoutDao.update(workout.copy(note = note))
+    }
+
     // Only one workout may have finishedAt == null at a time; the transaction makes the
     // check-then-insert atomic so two concurrent starts can't both slip through.
     suspend fun startSession(

@@ -54,6 +54,19 @@
     <string name="rest_timer_notification_title">%1$s rest</string>
     <string name="rest_timer_notification_remaining">%1$02d:%2$02d remaining</string>
 
+    <string name="workout_summary_duration_label">Duration</string>
+    <string name="workout_summary_volume_label">Total volume</string>
+    <string name="workout_summary_volume_format">%1$s kg</string>
+    <string name="workout_summary_set_count_label">Sets</string>
+    <string name="workout_summary_new_pr_title">New PRs</string>
+    <string name="workout_summary_previous_label">Last time: %1$s</string>
+    <string name="workout_summary_done">Done</string>
+
+    <string name="workout_detail_note_label">Note</string>
+    <string name="workout_detail_delete">Delete workout</string>
+    <string name="workout_detail_delete_confirm_title">Delete this workout?</string>
+    <string name="workout_detail_delete_confirm_body">This can\'t be undone.</string>
+
     <string name="placeholder_coming_soon">Coming soon</string>
 
     <string name="top_bar_program">Program</string>

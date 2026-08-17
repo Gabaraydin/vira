@@ -15,6 +15,7 @@ import io.github.Gabaraydin.vira.domain.model.displayName
 import io.github.Gabaraydin.vira.service.resttimer.RestTimerController
 import io.github.Gabaraydin.vira.service.resttimer.RestTimerState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -46,6 +47,12 @@ class ActiveWorkoutViewModel @Inject constructor(
     private var dayName: String = ""
     private var startedAt: Long = 0
     private var defaultRestSeconds: Int = 90
+
+    // A weight/reps field only commits on blur; tapping Finish directly out of a still-focused
+    // field triggers that blur but doesn't wait for it, so a just-typed value could otherwise
+    // be silently dropped from the very session summary being computed right after. Tracking
+    // the most recently launched edit here lets finishSession() await it before proceeding.
+    private var pendingSetUpdateJob: Job? = null
 
     val uiState: StateFlow<ActiveWorkoutUiState> = combine(
         workoutRepository.observeSetsForWorkout(workoutId),
@@ -148,7 +155,7 @@ class ActiveWorkoutViewModel @Inject constructor(
         // only starts once every member's set for this round is done — check with the state
         // from *before* the update lands, since the just-completed set itself isn't in it yet.
         val shouldStartRest = nowCompleted && !model.isWarmup && isLastSupersetMemberForRound(model)
-        viewModelScope.launch {
+        pendingSetUpdateJob = viewModelScope.launch {
             workoutRepository.updateSet(updated)
             if (shouldStartRest) startRestTimer(model)
         }
@@ -180,10 +187,11 @@ class ActiveWorkoutViewModel @Inject constructor(
     }
 
     private fun update(model: ActiveSetUiModel, transform: (WorkoutSet) -> WorkoutSet) {
-        viewModelScope.launch { workoutRepository.updateSet(transform(model.toDomain(workoutId))) }
+        pendingSetUpdateJob = viewModelScope.launch { workoutRepository.updateSet(transform(model.toDomain(workoutId))) }
     }
 
     suspend fun finishSession() {
+        pendingSetUpdateJob?.join()
         workoutRepository.finishSession(workoutId, finishedAt = System.currentTimeMillis())
     }
 }

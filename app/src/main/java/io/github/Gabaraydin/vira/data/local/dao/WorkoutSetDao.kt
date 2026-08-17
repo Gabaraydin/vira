@@ -52,4 +52,17 @@ interface WorkoutSetDao {
 
     @Query("SELECT MAX(position) FROM workout_set WHERE workoutId = :workoutId")
     suspend fun getMaxPosition(workoutId: Long): Int?
+
+    // Every completed, non-warm-up set this exercise has in a *different*, already
+    // finished workout — the history a just-finished session's sets get checked against
+    // to flag a new PR on the Workout Summary screen.
+    @Query(
+        """
+        SELECT ws.* FROM workout_set ws
+        INNER JOIN workout w ON w.id = ws.workoutId
+        WHERE ws.exerciseId = :exerciseId AND ws.workoutId != :excludeWorkoutId
+        AND w.finishedAt IS NOT NULL AND ws.isCompleted = 1 AND ws.isWarmup = 0
+        """,
+    )
+    suspend fun getPriorCompletedSets(exerciseId: Long, excludeWorkoutId: Long): List<WorkoutSetEntity>
 }
