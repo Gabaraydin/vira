@@ -2,6 +2,10 @@
 
     <!-- No INTERNET permission: the app is offline by construction, never add one. -->
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".ViraApplication"
         android:allowBackup="true"
@@ -19,6 +23,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!--
+          specialUse (not shortService): rest duration is user-configurable (global default
+          plus per-exercise override, adjustable +/-15s while running) and can exceed
+          shortService's fixed ~3-minute system timeout, which would kill a long rest mid-countdown.
+        -->
+        <service
+            android:name=".service.resttimer.RestTimerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Rest timer between workout sets, started by the user from an active workout session" />
+        </service>
     </application>
 
 </manifest>

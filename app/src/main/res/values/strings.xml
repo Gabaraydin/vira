@@ -44,6 +44,16 @@
     <string name="active_workout_finish_confirm_body">Some logged sets aren\'t marked complete yet. They\'ll be saved as-is if you finish now.</string>
     <string name="active_workout_elapsed_format">%1$02d:%2$02d</string>
 
+    <string name="rest_timer_bar_label">Rest — %1$s</string>
+    <string name="rest_timer_remaining_format">%1$02d:%2$02d</string>
+    <string name="rest_timer_action_skip">Skip</string>
+    <string name="rest_timer_action_minus_15">-15s</string>
+    <string name="rest_timer_action_plus_15">+15s</string>
+    <string name="rest_timer_channel_name">Rest timer</string>
+    <string name="rest_timer_channel_description">Countdown notification shown while resting between sets</string>
+    <string name="rest_timer_notification_title">%1$s rest</string>
+    <string name="rest_timer_notification_remaining">%1$02d:%2$02d remaining</string>
+
     <string name="placeholder_coming_soon">Coming soon</string>
 
     <string name="top_bar_program">Program</string>
