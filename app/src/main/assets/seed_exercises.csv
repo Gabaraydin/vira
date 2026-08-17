@@ -1,0 +1,122 @@
+name_en,name_tr,primary_muscle,secondary_muscles,equipment,is_bodyweight,is_unilateral
+Barbell Bench Press,Bench Press,CHEST,"TRICEPS,SHOULDERS",BARBELL,0,0
+Incline Barbell Bench Press,Eğik Bench Press,CHEST,"TRICEPS,SHOULDERS",BARBELL,0,0
+Dumbbell Bench Press,Dambıl Bench Press,CHEST,"TRICEPS,SHOULDERS",DUMBBELL,0,0
+Incline Dumbbell Press,Eğik Dambıl Press,CHEST,"TRICEPS,SHOULDERS",DUMBBELL,0,0
+Decline Bench Press,Ters Eğik Bench Press,CHEST,TRICEPS,BARBELL,0,0
+Chest Press Machine,Göğüs Press Makinesi,CHEST,TRICEPS,MACHINE,0,0
+Pec Deck,Pec Deck,CHEST,,MACHINE,0,0
+Cable Fly,Kablo Fly,CHEST,,CABLE,0,0
+Dumbbell Fly,Dambıl Fly,CHEST,,DUMBBELL,0,0
+Push-up,Şınav,CHEST,"TRICEPS,CORE",BODYWEIGHT,1,0
+Dips,Dips,CHEST,TRICEPS,BODYWEIGHT,1,0
+Cable Crossover,Kablo Crossover,CHEST,,CABLE,0,0
+Pull-up,Barfiks,BACK,"BICEPS,FOREARMS",BODYWEIGHT,1,0
+Chin-up,Ters Barfiks,BACK,BICEPS,BODYWEIGHT,1,0
+Lat Pulldown,Lat Pulldown,BACK,BICEPS,CABLE,0,0
+Close Grip Pulldown,Dar Tutuş Pulldown,BACK,BICEPS,CABLE,0,0
+Barbell Row,Barbell Row,BACK,"BICEPS,SHOULDERS",BARBELL,0,0
+Pendlay Row,Pendlay Row,BACK,BICEPS,BARBELL,0,0
+Dumbbell Row,Dambıl Row,BACK,BICEPS,DUMBBELL,0,1
+Seated Cable Row,Oturarak Kablo Row,BACK,BICEPS,CABLE,0,0
+T-Bar Row,T-Bar Row,BACK,BICEPS,BARBELL,0,0
+Chest Supported Row,Destekli Row,BACK,BICEPS,MACHINE,0,0
+Straight Arm Pulldown,Düz Kol Pulldown,BACK,,CABLE,0,0
+Face Pull,Face Pull,BACK,SHOULDERS,CABLE,0,0
+Deadlift,Deadlift,BACK,"HAMSTRINGS,GLUTES,FOREARMS",BARBELL,0,0
+Rack Pull,Rack Pull,BACK,"HAMSTRINGS,FOREARMS",BARBELL,0,0
+Barbell Shrug,Barbell Shrug,BACK,FOREARMS,BARBELL,0,0
+Dumbbell Shrug,Dambıl Shrug,BACK,FOREARMS,DUMBBELL,0,0
+Inverted Row,Ters Row,BACK,BICEPS,BODYWEIGHT,1,0
+Overhead Press,Omuz Press,SHOULDERS,TRICEPS,BARBELL,0,0
+Dumbbell Shoulder Press,Dambıl Omuz Press,SHOULDERS,TRICEPS,DUMBBELL,0,0
+Arnold Press,Arnold Press,SHOULDERS,TRICEPS,DUMBBELL,0,0
+Shoulder Press Machine,Omuz Press Makinesi,SHOULDERS,TRICEPS,MACHINE,0,0
+Lateral Raise,Yan Omuz,SHOULDERS,,DUMBBELL,0,0
+Cable Lateral Raise,Kablo Yan Omuz,SHOULDERS,,CABLE,0,1
+Front Raise,Ön Omuz,SHOULDERS,,DUMBBELL,0,0
+Rear Delt Fly,Arka Omuz Fly,SHOULDERS,BACK,DUMBBELL,0,0
+Reverse Pec Deck,Ters Pec Deck,SHOULDERS,BACK,MACHINE,0,0
+Upright Row,Dik Row,SHOULDERS,BICEPS,BARBELL,0,0
+Barbell Curl,Barbell Curl,BICEPS,FOREARMS,BARBELL,0,0
+EZ Bar Curl,EZ Bar Curl,BICEPS,FOREARMS,BARBELL,0,0
+Dumbbell Curl,Dambıl Curl,BICEPS,FOREARMS,DUMBBELL,0,1
+Hammer Curl,Hammer Curl,BICEPS,FOREARMS,DUMBBELL,0,1
+Incline Dumbbell Curl,Eğik Dambıl Curl,BICEPS,,DUMBBELL,0,1
+Preacher Curl,Preacher Curl,BICEPS,,BARBELL,0,0
+Cable Curl,Kablo Curl,BICEPS,FOREARMS,CABLE,0,0
+Concentration Curl,Konsantrasyon Curl,BICEPS,,DUMBBELL,0,1
+Spider Curl,Spider Curl,BICEPS,,DUMBBELL,0,0
+Triceps Pushdown,Triceps Pushdown,TRICEPS,,CABLE,0,0
+Rope Pushdown,Halat Pushdown,TRICEPS,,CABLE,0,0
+Skull Crusher,Skull Crusher,TRICEPS,,BARBELL,0,0
+Overhead Triceps Extension,Ense Triceps,TRICEPS,,DUMBBELL,0,0
+Cable Overhead Extension,Kablo Ense Triceps,TRICEPS,,CABLE,0,0
+Close Grip Bench Press,Dar Tutuş Bench Press,TRICEPS,CHEST,BARBELL,0,0
+Triceps Kickback,Triceps Kickback,TRICEPS,,DUMBBELL,0,1
+Bench Dips,Sehpa Dips,TRICEPS,CHEST,BODYWEIGHT,1,0
+Wrist Curl,Bilek Curl,FOREARMS,,DUMBBELL,0,0
+Reverse Curl,Ters Curl,FOREARMS,BICEPS,BARBELL,0,0
+Farmer Walk,Farmer Walk,FOREARMS,"CORE,QUADS",DUMBBELL,0,0
+Back Squat,Squat,QUADS,"GLUTES,CORE",BARBELL,0,0
+Front Squat,Ön Squat,QUADS,"GLUTES,CORE",BARBELL,0,0
+Hack Squat,Hack Squat,QUADS,GLUTES,MACHINE,0,0
+Leg Press,Leg Press,QUADS,GLUTES,MACHINE,0,0
+Leg Extension,Leg Extension,QUADS,,MACHINE,0,0
+Bulgarian Split Squat,Bulgar Split Squat,QUADS,GLUTES,DUMBBELL,0,1
+Walking Lunge,Yürüyen Lunge,QUADS,GLUTES,DUMBBELL,0,1
+Goblet Squat,Goblet Squat,QUADS,GLUTES,DUMBBELL,0,0
+Step-up,Step-up,QUADS,GLUTES,DUMBBELL,0,1
+Romanian Deadlift,Romanian Deadlift,HAMSTRINGS,"GLUTES,BACK",BARBELL,0,0
+Stiff Leg Deadlift,Düz Bacak Deadlift,HAMSTRINGS,GLUTES,BARBELL,0,0
+Lying Leg Curl,Yatarak Leg Curl,HAMSTRINGS,,MACHINE,0,0
+Seated Leg Curl,Oturarak Leg Curl,HAMSTRINGS,,MACHINE,0,0
+Nordic Curl,Nordic Curl,HAMSTRINGS,,BODYWEIGHT,1,0
+Good Morning,Good Morning,HAMSTRINGS,BACK,BARBELL,0,0
+Hip Thrust,Hip Thrust,GLUTES,HAMSTRINGS,BARBELL,0,0
+Glute Bridge,Kalça Köprüsü,GLUTES,HAMSTRINGS,BODYWEIGHT,1,0
+Cable Kickback,Kablo Kickback,GLUTES,,CABLE,0,1
+Hip Abduction Machine,Kalça Abdüksiyon,GLUTES,,MACHINE,0,0
+Standing Calf Raise,Ayakta Calf Raise,CALVES,,MACHINE,0,0
+Seated Calf Raise,Oturarak Calf Raise,CALVES,,MACHINE,0,0
+Leg Press Calf Raise,Leg Press Calf,CALVES,,MACHINE,0,0
+Plank,Plank,CORE,,BODYWEIGHT,1,0
+Side Plank,Yan Plank,CORE,,BODYWEIGHT,1,1
+Hanging Leg Raise,Asılı Bacak Kaldırma,CORE,FOREARMS,BODYWEIGHT,1,0
+Hanging Knee Raise,Asılı Diz Çekme,CORE,,BODYWEIGHT,1,0
+Cable Crunch,Kablo Crunch,CORE,,CABLE,0,0
+Crunch,Mekik,CORE,,BODYWEIGHT,1,0
+Russian Twist,Rus Twist,CORE,,BODYWEIGHT,1,0
+Ab Wheel Rollout,Ab Wheel,CORE,,OTHER,0,0
+Dead Bug,Dead Bug,CORE,,BODYWEIGHT,1,0
+Mountain Climber,Mountain Climber,CORE,CARDIO,BODYWEIGHT,1,0
+Back Extension,Bel Ekstansiyonu,CORE,"GLUTES,HAMSTRINGS",BODYWEIGHT,1,0
+Pallof Press,Pallof Press,CORE,,CABLE,0,1
+Treadmill Run,Koşu Bandı,CARDIO,,MACHINE,0,0
+Treadmill Incline Walk,Eğimli Yürüyüş,CARDIO,,MACHINE,0,0
+Stationary Bike,Kondisyon Bisikleti,CARDIO,,MACHINE,0,0
+Elliptical,Eliptik,CARDIO,,MACHINE,0,0
+Rowing Machine,Kürek Makinesi,CARDIO,BACK,MACHINE,0,0
+Stair Climber,Merdiven Makinesi,CARDIO,,MACHINE,0,0
+Jump Rope,İp Atlama,CARDIO,CALVES,OTHER,1,0
+Burpee,Burpee,CARDIO,FULL_BODY,BODYWEIGHT,1,0
+Kettlebell Swing,Kettlebell Swing,GLUTES,"HAMSTRINGS,CORE",KETTLEBELL,0,0
+Kettlebell Goblet Squat,Kettlebell Goblet Squat,QUADS,GLUTES,KETTLEBELL,0,0
+Turkish Get-up,Turkish Get-up,FULL_BODY,"CORE,SHOULDERS",KETTLEBELL,0,1
+Clean and Press,Clean and Press,FULL_BODY,"SHOULDERS,QUADS",BARBELL,0,0
+Power Clean,Power Clean,FULL_BODY,"BACK,QUADS",BARBELL,0,0
+Thruster,Thruster,FULL_BODY,"SHOULDERS,QUADS",BARBELL,0,0
+Band Pull-apart,Lastik Pull-apart,SHOULDERS,BACK,BAND,0,0
+Band Face Pull,Lastik Face Pull,SHOULDERS,BACK,BAND,0,0
+Assisted Pull-up,Destekli Barfiks,BACK,BICEPS,MACHINE,0,0
+Smith Machine Squat,Smith Squat,QUADS,GLUTES,MACHINE,0,0
+Smith Machine Bench Press,Smith Bench Press,CHEST,TRICEPS,MACHINE,0,0
+Landmine Press,Landmine Press,SHOULDERS,"CHEST,TRICEPS",BARBELL,0,1
+Chest Dip Machine,Dips Makinesi,CHEST,TRICEPS,MACHINE,0,0
+Cable Pull Through,Kablo Pull Through,GLUTES,HAMSTRINGS,CABLE,0,0
+Zercher Squat,Zercher Squat,QUADS,"CORE,GLUTES",BARBELL,0,0
+Sissy Squat,Sissy Squat,QUADS,,BODYWEIGHT,1,0
+Reverse Lunge,Geri Lunge,QUADS,GLUTES,DUMBBELL,0,1
+Single Leg Press,Tek Bacak Leg Press,QUADS,GLUTES,MACHINE,0,1
+Machine Row,Makine Row,BACK,BICEPS,MACHINE,0,0
+Meadows Row,Meadows Row,BACK,BICEPS,BARBELL,0,1
