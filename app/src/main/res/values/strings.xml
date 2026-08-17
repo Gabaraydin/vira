@@ -67,6 +67,13 @@
     <string name="workout_detail_delete_confirm_title">Delete this workout?</string>
     <string name="workout_detail_delete_confirm_body">This can\'t be undone.</string>
 
+    <string name="history_tab_calendar">Calendar</string>
+    <string name="history_tab_list">List</string>
+    <string name="history_cycle_header_format">Cycle %1$d (%2$d/%3$d)</string>
+    <string name="history_empty">No workouts logged yet</string>
+    <string name="history_month_previous">Previous month</string>
+    <string name="history_month_next">Next month</string>
+
     <string name="placeholder_coming_soon">Coming soon</string>
 
     <string name="top_bar_program">Program</string>
