@@ -1,5 +1,6 @@
 package io.github.Gabaraydin.vira.domain.calculations
 
+import io.github.Gabaraydin.vira.domain.model.BiologicalSex
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertThrows
 import org.junit.Test
@@ -94,5 +95,31 @@ class BodyCompositionTest {
         assertThrows(IllegalArgumentException::class.java) {
             bodyMassIndex(weightKg = 80.0, heightCm = 0.0)
         }
+    }
+
+    // --- bodyFatCategory ---
+
+    @Test
+    fun `male category bands`() {
+        assertEquals(BodyFatCategory.ESSENTIAL_FAT, bodyFatCategory(3.0, BiologicalSex.MALE))
+        assertEquals(BodyFatCategory.ATHLETES, bodyFatCategory(10.0, BiologicalSex.MALE))
+        assertEquals(BodyFatCategory.FITNESS, bodyFatCategory(15.0, BiologicalSex.MALE))
+        assertEquals(BodyFatCategory.ACCEPTABLE, bodyFatCategory(20.0, BiologicalSex.MALE))
+        assertEquals(BodyFatCategory.OBESE, bodyFatCategory(30.0, BiologicalSex.MALE))
+    }
+
+    @Test
+    fun `female category bands`() {
+        assertEquals(BodyFatCategory.ESSENTIAL_FAT, bodyFatCategory(11.0, BiologicalSex.FEMALE))
+        assertEquals(BodyFatCategory.ATHLETES, bodyFatCategory(16.0, BiologicalSex.FEMALE))
+        assertEquals(BodyFatCategory.FITNESS, bodyFatCategory(22.0, BiologicalSex.FEMALE))
+        assertEquals(BodyFatCategory.ACCEPTABLE, bodyFatCategory(28.0, BiologicalSex.FEMALE))
+        assertEquals(BodyFatCategory.OBESE, bodyFatCategory(35.0, BiologicalSex.FEMALE))
+    }
+
+    @Test
+    fun `category band boundary is inclusive on the lower band`() {
+        assertEquals(BodyFatCategory.ESSENTIAL_FAT, bodyFatCategory(5.0, BiologicalSex.MALE))
+        assertEquals(BodyFatCategory.ATHLETES, bodyFatCategory(5.0001, BiologicalSex.MALE))
     }
 }

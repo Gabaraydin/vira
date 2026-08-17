@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.Gabaraydin.vira.domain.model.AppLanguage
 import io.github.Gabaraydin.vira.domain.model.AppSettings
+import io.github.Gabaraydin.vira.domain.model.BiologicalSex
 import io.github.Gabaraydin.vira.domain.model.ThemeMode
 import io.github.Gabaraydin.vira.domain.model.WeightUnit
 import kotlinx.coroutines.flow.first
@@ -53,6 +54,16 @@ class SettingsRepositoryTest {
         assertEquals(true, settings.keepScreenOnDuringSession)
         assertNull(settings.lastBackupExportAt)
         assertEquals(false, settings.hasSeenProgramSwitchExplanation)
+        assertEquals(BiologicalSex.MALE, settings.biologicalSex)
+    }
+
+    @Test
+    fun settingBiologicalSexPersists() = runBlocking {
+        val repository = newRepository()
+
+        repository.setBiologicalSex(BiologicalSex.FEMALE)
+
+        assertEquals(BiologicalSex.FEMALE, repository.settings.first().biologicalSex)
     }
 
     @Test
