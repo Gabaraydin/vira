@@ -7,7 +7,7 @@ build/
 /captures/
 .externalNativeBuild/
 .cxx/
-local/
+/local/
 keystore.properties
 *.jks
 *.keystore
