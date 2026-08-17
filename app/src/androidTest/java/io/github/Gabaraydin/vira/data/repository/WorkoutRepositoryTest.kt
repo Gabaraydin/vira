@@ -6,6 +6,8 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.github.Gabaraydin.vira.data.local.ViraDatabase
 import io.github.Gabaraydin.vira.data.local.entity.ExerciseEntity
+import io.github.Gabaraydin.vira.data.local.entity.ProgramDayEntity
+import io.github.Gabaraydin.vira.data.local.entity.ProgramEntity
 import io.github.Gabaraydin.vira.domain.model.Equipment
 import io.github.Gabaraydin.vira.domain.model.MuscleGroup
 import io.github.Gabaraydin.vira.domain.model.WorkoutSet
@@ -174,5 +176,65 @@ class WorkoutRepositoryTest {
         assertEquals(1, added.position)
         assertEquals(0.0, added.weightKg, 0.0)
         assertEquals(false, added.isCompleted)
+    }
+
+    // --- workout summary / detail (#14) ---
+
+    private suspend fun seedProgramDay(): Long {
+        val programId = database.programDao().insert(
+            ProgramEntity(name = "Push Pull Legs", isActive = true, createdAt = 0, archivedAt = null),
+        )
+        return database.programDayDao().insert(
+            ProgramDayEntity(programId = programId, position = 0, name = "Push", isRest = false, libraryCategory = null),
+        )
+    }
+
+    @Test
+    fun previousWorkoutForDayIsTheMostRecentOtherFinishedWorkoutOnThatDay() = runTest {
+        val dayId = seedProgramDay()
+        val olderId = repository.startSession(dayId, "Push", "PPL", LocalDate.of(2026, 1, 1), 1000)
+        repository.finishSession(olderId, 1100)
+        val currentId = repository.startSession(dayId, "Push", "PPL", LocalDate.of(2026, 1, 8), 2000)
+
+        val previous = repository.getPreviousWorkoutForDay(dayId, excludeWorkoutId = currentId)
+
+        assertNotNull(previous)
+        assertEquals(olderId, previous!!.id)
+    }
+
+    @Test
+    fun previousWorkoutForDayIsNullOnTheFirstCycle() = runTest {
+        val dayId = seedProgramDay()
+        val currentId = repository.startSession(dayId, "Push", "PPL", LocalDate.of(2026, 1, 1), 1000)
+
+        assertNull(repository.getPreviousWorkoutForDay(dayId, excludeWorkoutId = currentId))
+    }
+
+    @Test
+    fun priorCompletedSetsExcludeTheCurrentWorkoutAndUnfinishedWorkouts() = runTest {
+        val exerciseId = seedExercise()
+        val finishedId = repository.startSession(null, "Older", null, LocalDate.of(2026, 1, 1), 1000)
+        repository.addSet(WorkoutSet(0, finishedId, exerciseId, 0, 1, 100.0, 5, null, false, true, 1000, null))
+        repository.finishSession(finishedId, 1100)
+
+        val currentId = repository.startSession(null, "Current", null, LocalDate.of(2026, 1, 8), 2000)
+        repository.addSet(WorkoutSet(0, currentId, exerciseId, 0, 1, 110.0, 5, null, false, true, 2000, null))
+
+        val prior = repository.getPriorCompletedSets(exerciseId, excludeWorkoutId = currentId)
+
+        assertEquals(1, prior.size)
+        assertEquals(100.0, prior.single().weightKg, 0.0)
+    }
+
+    @Test
+    fun updateNoteChangesOnlyTheNoteField() = runTest {
+        val workoutId = repository.startSession(null, "Ad-hoc", null, LocalDate.of(2026, 1, 1), 1000)
+        repository.finishSession(workoutId, 1100)
+
+        repository.updateNote(workoutId, "Felt strong today")
+
+        val updated = requireNotNull(database.workoutDao().getById(workoutId))
+        assertEquals("Felt strong today", updated.note)
+        assertEquals(1100L, updated.finishedAt)
     }
 }

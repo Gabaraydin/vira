@@ -40,6 +40,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -83,7 +84,12 @@ fun ActiveWorkoutRoute(
         }
     }
 
+    val focusManager = LocalFocusManager.current
     val onFinish: () -> Unit = {
+        // A field mid-edit only saves on blur; clearing focus here forces that blur (and
+        // the save it triggers) to happen before finishSession() reads the final sets —
+        // otherwise tapping Finish straight out of a focused field would silently drop it.
+        focusManager.clearFocus(force = true)
         if (uiState.hasIncompleteSets) {
             showFinishConfirm = true
         } else {

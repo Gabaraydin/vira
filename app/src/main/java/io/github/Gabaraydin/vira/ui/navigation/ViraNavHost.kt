@@ -26,6 +26,8 @@ import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
 import io.github.Gabaraydin.vira.ui.programeditor.PlannedExercisesRoute
 import io.github.Gabaraydin.vira.ui.programeditor.ProgramListRoute
 import io.github.Gabaraydin.vira.ui.today.TodayRoute
+import io.github.Gabaraydin.vira.ui.workoutdetail.WorkoutDetailRoute
+import io.github.Gabaraydin.vira.ui.workoutsummary.WorkoutSummaryRoute
 
 private enum class BottomDestination(val route: String, val labelRes: Int) {
     TODAY("today", R.string.nav_today),
@@ -36,6 +38,8 @@ private enum class BottomDestination(val route: String, val labelRes: Int) {
 
 private const val ACTIVE_WORKOUT_ARG = "workoutId"
 private const val ACTIVE_WORKOUT_ROUTE = "active_workout/{$ACTIVE_WORKOUT_ARG}"
+private const val WORKOUT_SUMMARY_ROUTE = "workout_summary/{$ACTIVE_WORKOUT_ARG}"
+private const val WORKOUT_DETAIL_ROUTE = "workout_detail/{$ACTIVE_WORKOUT_ARG}"
 private const val PROGRAM_LIST_ROUTE = "program_list"
 private const val SETTINGS_ROUTE = "settings"
 private const val DAY_EDITOR_ARG = "programId"
@@ -109,8 +113,24 @@ fun ViraNavHost() {
                 ActiveWorkoutRoute(
                     workoutId = workoutId,
                     onAddExercise = { id -> navController.navigate("exercise_picker_log/$id") },
-                    onFinished = { navController.popBackStack() },
+                    onFinished = {
+                        navController.navigate("workout_summary/$workoutId") {
+                            popUpTo(ACTIVE_WORKOUT_ROUTE) { inclusive = true }
+                        }
+                    },
                 )
+            }
+            composable(
+                route = WORKOUT_SUMMARY_ROUTE,
+                arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),
+            ) {
+                WorkoutSummaryRoute(onDone = { navController.popBackStack() })
+            }
+            composable(
+                route = WORKOUT_DETAIL_ROUTE,
+                arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),
+            ) {
+                WorkoutDetailRoute(onDeleted = { navController.popBackStack() })
             }
             composable(PROGRAM_LIST_ROUTE) {
                 ProgramListRoute(onOpenDayEditor = { programId -> navController.navigate("day_editor/$programId") })
