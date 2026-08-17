@@ -1,6 +1,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- No INTERNET permission: the app is offline by construction, never add one. -->
+    <!--
+      INTERNET is used only to serve AdMob banner ads (added 2026-08-17 at the user's
+      request, reversing the original offline-only decision). All training data itself
+      still never leaves the device — this permission is not used for sync or telemetry.
+    -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
@@ -13,6 +18,16 @@
         android:label="@string/app_name"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:supportsRtl="true">
+
+        <!--
+          TEST App ID (Google's published constant, safe to ship in debug/dev builds —
+          always serves clearly-labelled test ads, never real ones). Must be replaced
+          with the real AdMob App ID from the developer's own AdMob console before any
+          release build; swapping it is a release-checklist item, not done here.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713" />
 
         <activity
             android:name=".MainActivity"
