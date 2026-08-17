@@ -1,5 +1,6 @@
 package io.github.Gabaraydin.vira.ui.navigation
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
@@ -20,6 +21,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
+import io.github.Gabaraydin.vira.ui.ads.BannerAdView
 import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
 import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
 import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
@@ -75,20 +77,25 @@ fun ViraNavHost() {
         },
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
-                    BottomDestination.entries.forEach { destination ->
-                        NavigationBarItem(
-                            selected = currentRoute == destination.route,
-                            onClick = {
-                                navController.navigate(destination.route) {
-                                    popUpTo(BottomDestination.TODAY.route) { saveState = true }
-                                    launchSingleTop = true
-                                    restoreState = true
-                                }
-                            },
-                            icon = {},
-                            label = { Text(stringResource(destination.labelRes)) },
-                        )
+                Column {
+                    // Persistent banner, never interstitial/fullscreen — shown only on the
+                    // 4 main tabs, never during an active workout or any other focused flow.
+                    BannerAdView()
+                    NavigationBar {
+                        BottomDestination.entries.forEach { destination ->
+                            NavigationBarItem(
+                                selected = currentRoute == destination.route,
+                                onClick = {
+                                    navController.navigate(destination.route) {
+                                        popUpTo(BottomDestination.TODAY.route) { saveState = true }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {},
+                                label = { Text(stringResource(destination.labelRes)) },
+                            )
+                        }
                     }
                 }
             }
