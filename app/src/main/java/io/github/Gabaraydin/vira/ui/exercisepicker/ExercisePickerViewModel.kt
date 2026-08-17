@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.github.Gabaraydin.vira.data.repository.ExerciseRepository
 import io.github.Gabaraydin.vira.data.repository.ProgramRepository
+import io.github.Gabaraydin.vira.data.repository.WorkoutRepository
 import io.github.Gabaraydin.vira.domain.model.displayName
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -21,9 +22,13 @@ class ExercisePickerViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val exerciseRepository: ExerciseRepository,
     private val programRepository: ProgramRepository,
+    private val workoutRepository: WorkoutRepository,
 ) : ViewModel() {
 
-    private val programDayId: Long = checkNotNull(savedStateHandle["programDayId"])
+    // Exactly one of these is present depending on which route opened the picker: planning
+    // a day's exercises (#10/#11) vs logging an unplanned exercise mid-session (#12).
+    private val programDayId: Long? = savedStateHandle["programDayId"]
+    private val workoutId: Long? = savedStateHandle["workoutId"]
 
     private val query = MutableStateFlow("")
     private val selectedIds = MutableStateFlow<Set<Long>>(emptySet())
@@ -57,12 +62,18 @@ class ExercisePickerViewModel @Inject constructor(
 
     fun confirmSelection(onDone: () -> Unit) {
         val ids = selectedIds.value
+        val dayId = programDayId
+        val activeWorkoutId = workoutId
         viewModelScope.launch {
             ids.forEach { exerciseId ->
-                programRepository.addExerciseToDay(
-                    programDayId, exerciseId, targetSets = 3,
-                    targetRepsMin = null, targetRepsMax = null, targetWeightKg = null, restSecOverride = null,
-                )
+                if (dayId != null) {
+                    programRepository.addExerciseToDay(
+                        dayId, exerciseId, targetSets = 3,
+                        targetRepsMin = null, targetRepsMax = null, targetWeightKg = null, restSecOverride = null,
+                    )
+                } else if (activeWorkoutId != null) {
+                    workoutRepository.addUnplannedExercise(activeWorkoutId, exerciseId)
+                }
             }
             onDone()
         }

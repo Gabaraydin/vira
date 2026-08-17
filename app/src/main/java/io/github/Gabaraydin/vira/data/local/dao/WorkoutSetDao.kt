@@ -30,4 +30,26 @@ interface WorkoutSetDao {
             "AND isCompleted = 1 ORDER BY completedAt",
     )
     suspend fun getCountableForExercise(exerciseId: Long): List<WorkoutSetEntity>
+
+    // For the active-workout screen's "previous session" reference row: every set this
+    // exercise had in the most recent *other* finished workout that logged it at all.
+    @Query(
+        """
+        SELECT ws.* FROM workout_set ws
+        INNER JOIN workout w ON w.id = ws.workoutId
+        WHERE ws.exerciseId = :exerciseId AND ws.workoutId != :excludeWorkoutId AND w.finishedAt IS NOT NULL
+        AND ws.workoutId = (
+            SELECT ws2.workoutId FROM workout_set ws2
+            INNER JOIN workout w2 ON w2.id = ws2.workoutId
+            WHERE ws2.exerciseId = :exerciseId AND ws2.workoutId != :excludeWorkoutId AND w2.finishedAt IS NOT NULL
+            ORDER BY w2.date DESC, w2.startedAt DESC
+            LIMIT 1
+        )
+        ORDER BY ws.position
+        """,
+    )
+    suspend fun getPreviousSessionSets(exerciseId: Long, excludeWorkoutId: Long): List<WorkoutSetEntity>
+
+    @Query("SELECT MAX(position) FROM workout_set WHERE workoutId = :workoutId")
+    suspend fun getMaxPosition(workoutId: Long): Int?
 }
