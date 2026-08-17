@@ -194,6 +194,47 @@ class ProgramRepositoryTest {
 
         assertRejected { repository.groupIntoSuperset(dayId, nonContiguous) }
     }
+
+    // --- updateDay / duplicateProgram ---
+
+    @Test
+    fun updateDayPersistsANameChangeAndRestToggle() = runTest {
+        val programId = repository.createProgram("Program", createdAt = 1)
+        val dayId = repository.addDay(programId, "Day A", isRest = false, libraryCategory = null)
+        val day = requireNotNull(database.programDayDao().getById(dayId)).toDomain()
+
+        repository.updateDay(day.copy(name = "Renamed", isRest = true))
+
+        val updated = requireNotNull(database.programDayDao().getById(dayId))
+        assertEquals("Renamed", updated.name)
+        assertTrue(updated.isRest)
+    }
+
+    @Test
+    fun duplicateProgramCopiesDaysAndPlannedExercises() = runTest {
+        val sourceId = repository.createProgram("Original", createdAt = 1)
+        val dayId = repository.addDay(sourceId, "Push", isRest = false, libraryCategory = null)
+        repository.addDay(sourceId, "Rest", isRest = true, libraryCategory = null)
+        val exerciseId = seedExercises(1).single()
+        repository.addExerciseToDay(
+            dayId, exerciseId, targetSets = 3, targetRepsMin = 8, targetRepsMax = 12,
+            targetWeightKg = null, restSecOverride = null,
+        )
+
+        val copyId = repository.duplicateProgram(sourceId, newName = "Original copy", createdAt = 2)
+
+        assertFalse(requireNotNull(database.programDao().getById(copyId)).isActive)
+        val copiedDays = database.programDayDao().getForProgram(copyId).sortedBy { it.position }
+        assertEquals(listOf("Push", "Rest"), copiedDays.map { it.name })
+        val copiedExercises = database.programDayExerciseDao().getForDay(copiedDays[0].id)
+        assertEquals(1, copiedExercises.size)
+        assertEquals(exerciseId, copiedExercises[0].exerciseId)
+        assertEquals(8, copiedExercises[0].targetRepsMin)
+
+        // The source is untouched.
+        val sourceDays = database.programDayDao().getForProgram(sourceId)
+        assertEquals(2, sourceDays.size)
+    }
 }
 
 private fun ProgramDayEntity.toDomain() = ProgramDay(
