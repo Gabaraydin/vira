@@ -121,4 +121,55 @@
     <string name="exercise_picker_search_placeholder">Search</string>
     <string name="exercise_picker_empty">No exercises match</string>
     <string name="exercise_picker_add_selected">Add %1$d</string>
+
+    <string name="muscle_group_chest">Chest</string>
+    <string name="muscle_group_back">Back</string>
+    <string name="muscle_group_shoulders">Shoulders</string>
+    <string name="muscle_group_biceps">Biceps</string>
+    <string name="muscle_group_triceps">Triceps</string>
+    <string name="muscle_group_forearms">Forearms</string>
+    <string name="muscle_group_quads">Quads</string>
+    <string name="muscle_group_hamstrings">Hamstrings</string>
+    <string name="muscle_group_glutes">Glutes</string>
+    <string name="muscle_group_calves">Calves</string>
+    <string name="muscle_group_core">Core</string>
+    <string name="muscle_group_cardio">Cardio</string>
+    <string name="muscle_group_full_body">Full body</string>
+
+    <string name="equipment_barbell">Barbell</string>
+    <string name="equipment_dumbbell">Dumbbell</string>
+    <string name="equipment_machine">Machine</string>
+    <string name="equipment_cable">Cable</string>
+    <string name="equipment_bodyweight">Bodyweight</string>
+    <string name="equipment_kettlebell">Kettlebell</string>
+    <string name="equipment_band">Band</string>
+    <string name="equipment_other">Other</string>
+
+    <string name="exercise_library_title">Exercises</string>
+    <string name="exercise_library_search_placeholder">Search</string>
+    <string name="exercise_library_filter_custom_only">Custom only</string>
+    <string name="exercise_library_empty">No exercises match</string>
+    <string name="exercise_library_last_performed_format">Last: %1$s</string>
+    <string name="exercise_library_last_performed_never">Never performed</string>
+    <string name="exercise_library_add_custom">Add custom exercise</string>
+    <string name="exercise_library_add_dialog_title">New exercise</string>
+    <string name="exercise_library_add_dialog_name_label">Name</string>
+    <string name="exercise_library_add_dialog_muscle_label">Primary muscle</string>
+    <string name="exercise_library_add_dialog_equipment_label">Equipment</string>
+
+    <string name="exercise_detail_e1rm_chart_title">Estimated 1RM over time</string>
+    <string name="exercise_detail_e1rm_chart_empty">No sessions logged yet</string>
+    <string name="exercise_detail_e1rm_chart_y_format">%1$s kg</string>
+    <string name="exercise_detail_pr_title">Personal records</string>
+    <string name="exercise_detail_pr_best_e1rm_format">Best e1RM: %1$s kg</string>
+    <string name="exercise_detail_pr_rep_row_format">%1$d rep: %2$s kg</string>
+    <string name="exercise_detail_pr_empty">No PRs yet</string>
+    <string name="exercise_detail_history_title">Session history</string>
+    <string name="exercise_detail_history_empty">No sessions yet</string>
+    <string name="exercise_detail_history_set_format">%1$s×%2$d</string>
+    <string name="exercise_detail_rest_override_label">Rest override (seconds)</string>
+    <string name="exercise_detail_rest_override_hint">Uses the global default</string>
+    <string name="exercise_detail_archive">Archive exercise</string>
+    <string name="exercise_detail_archive_confirm_title">Archive this exercise?</string>
+    <string name="exercise_detail_archive_confirm_body">It won\'t show up when planning or logging workouts, but existing history is kept.</string>
 </resources>

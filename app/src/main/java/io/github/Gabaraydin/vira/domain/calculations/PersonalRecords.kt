@@ -16,3 +16,17 @@ private fun bestEstimatedOneRepMax(sets: List<SetForPr>): Double? =
     sets
         .filter { it.isCompleted && !it.isWarmup && it.weightKg > 0 && it.reps >= 1 }
         .maxOfOrNull { estimatedOneRepMax(it.weightKg, it.reps).kg }
+
+// Exercise Detail's "best weight per rep count" PR table: the heaviest completed,
+// non-warm-up set logged for each distinct rep count, sorted low-to-high reps.
+data class RepPr(val reps: Int, val weightKg: Double)
+
+fun bestWeightPerRepCount(sets: List<SetForPr>): List<RepPr> =
+    sets
+        .filter { it.isCompleted && !it.isWarmup && it.weightKg > 0 && it.reps >= 1 }
+        .groupBy { it.reps }
+        .map { (reps, group) -> RepPr(reps, group.maxOf { it.weightKg }) }
+        .sortedBy { it.reps }
+
+// The single best estimated 1RM across the whole set, or null with no qualifying sets.
+fun bestOverallEstimatedOneRepMax(sets: List<SetForPr>): Double? = bestEstimatedOneRepMax(sets)

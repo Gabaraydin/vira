@@ -22,7 +22,9 @@ import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
 import io.github.Gabaraydin.vira.ui.ads.BannerAdView
+import io.github.Gabaraydin.vira.ui.exercisedetail.ExerciseDetailRoute
 import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
+import io.github.Gabaraydin.vira.ui.exerciselibrary.ExerciseLibraryRoute
 import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
 import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
 import io.github.Gabaraydin.vira.ui.programeditor.PlannedExercisesRoute
@@ -51,6 +53,8 @@ private const val DAY_EXERCISES_ARG = "programDayId"
 private const val DAY_EXERCISES_ROUTE = "day_exercises/{$DAY_EXERCISES_ARG}"
 private const val EXERCISE_PICKER_ROUTE = "exercise_picker/{$DAY_EXERCISES_ARG}"
 private const val EXERCISE_PICKER_LOG_ROUTE = "exercise_picker_log/{$ACTIVE_WORKOUT_ARG}"
+private const val EXERCISE_DETAIL_ARG = "exerciseId"
+private const val EXERCISE_DETAIL_ROUTE = "exercise_detail/{$EXERCISE_DETAIL_ARG}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -112,7 +116,15 @@ fun ViraNavHost() {
             composable(BottomDestination.HISTORY.route) {
                 HistoryRoute(onOpenWorkout = { id -> navController.navigate("workout_detail/$id") })
             }
-            composable(BottomDestination.EXERCISES.route) { ComingSoonScreen() }
+            composable(BottomDestination.EXERCISES.route) {
+                ExerciseLibraryRoute(onOpenExercise = { id -> navController.navigate("exercise_detail/$id") })
+            }
+            composable(
+                route = EXERCISE_DETAIL_ROUTE,
+                arguments = listOf(navArgument(EXERCISE_DETAIL_ARG) { type = NavType.LongType }),
+            ) {
+                ExerciseDetailRoute(onArchived = { navController.popBackStack() })
+            }
             composable(BottomDestination.BODY.route) { ComingSoonScreen() }
             composable(SETTINGS_ROUTE) { ComingSoonScreen() }
             composable(

@@ -2,11 +2,17 @@ package io.github.Gabaraydin.vira.data.local.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
+import androidx.room.Embedded
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import io.github.Gabaraydin.vira.data.local.entity.WorkoutSetEntity
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
+
+data class WorkoutSetWithDate(@Embedded val set: WorkoutSetEntity, val date: LocalDate)
+
+data class ExerciseLastPerformed(val exerciseId: Long, val lastDate: LocalDate)
 
 @Dao
 interface WorkoutSetDao {
@@ -65,4 +71,30 @@ interface WorkoutSetDao {
         """,
     )
     suspend fun getPriorCompletedSets(exerciseId: Long, excludeWorkoutId: Long): List<WorkoutSetEntity>
+
+    // Exercise Detail's e1RM chart, PR table, and session history all come from this one
+    // query: every set logged for the exercise in a finished workout, oldest first, each
+    // tagged with its workout's date so the caller can group by session.
+    @Query(
+        """
+        SELECT ws.*, w.date AS date FROM workout_set ws
+        INNER JOIN workout w ON w.id = ws.workoutId
+        WHERE ws.exerciseId = :exerciseId AND w.finishedAt IS NOT NULL
+        ORDER BY w.date, w.startedAt
+        """,
+    )
+    fun observeAllSetsForExercise(exerciseId: Long): Flow<List<WorkoutSetWithDate>>
+
+    // The Exercise Library list's "last performed" column, for every exercise at once —
+    // avoids one query per row for what could be ~120 rows.
+    @Query(
+        """
+        SELECT ws.exerciseId AS exerciseId, MAX(w.date) AS lastDate
+        FROM workout_set ws
+        INNER JOIN workout w ON w.id = ws.workoutId
+        WHERE w.finishedAt IS NOT NULL AND ws.isCompleted = 1
+        GROUP BY ws.exerciseId
+        """,
+    )
+    fun observeLastPerformedDates(): Flow<List<ExerciseLastPerformed>>
 }
