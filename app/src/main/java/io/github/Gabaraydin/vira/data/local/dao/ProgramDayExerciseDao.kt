@@ -24,4 +24,7 @@ interface ProgramDayExerciseDao {
 
     @Query("SELECT * FROM program_day_exercise WHERE programDayId = :programDayId ORDER BY position")
     suspend fun getForDay(programDayId: Long): List<ProgramDayExerciseEntity>
+
+    @Query("SELECT * FROM program_day_exercise WHERE id = :id")
+    suspend fun getById(id: Long): ProgramDayExerciseEntity?
 }

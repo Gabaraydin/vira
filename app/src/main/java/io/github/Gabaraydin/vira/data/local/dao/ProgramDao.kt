@@ -23,4 +23,12 @@ interface ProgramDao {
 
     @Query("SELECT * FROM program WHERE archivedAt IS NULL ORDER BY createdAt")
     fun observeUnarchived(): Flow<List<ProgramEntity>>
+
+    // Used together, in a transaction, to enforce "exactly one active program" in the
+    // repository rather than with a database constraint.
+    @Query("UPDATE program SET isActive = 0 WHERE id != :programId")
+    suspend fun deactivateAllExcept(programId: Long)
+
+    @Query("UPDATE program SET isActive = 1 WHERE id = :programId")
+    suspend fun activate(programId: Long)
 }
