@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Vira</string>
+
+    <string name="nav_today">Today</string>
+    <string name="nav_history">History</string>
+    <string name="nav_exercises">Exercises</string>
+    <string name="nav_body">Body</string>
+
+    <string name="today_empty_title">No program yet</string>
+    <string name="today_empty_subtitle">Pick a template to start, or build your own.</string>
+    <string name="today_template_build_own">Build my own</string>
+    <string name="template_five_day_split">5-Day Split</string>
+    <string name="template_push_pull_legs">Push Pull Legs</string>
+    <string name="template_push_pull_legs_double">PPL x2</string>
+    <string name="template_upper_lower">Upper/Lower</string>
+    <string name="template_full_body_three_day">Full Body (3 days)</string>
+    <string name="template_bro_split">Bro Split</string>
+
+    <string name="today_next_day_position">Day %1$d / %2$d</string>
+    <string name="today_planned_exercise_count">%1$d exercises planned</string>
+    <string name="today_streak_did_yesterday">You did %1$s yesterday</string>
+    <string name="today_streak_gap_days">%1$d days without logging</string>
+    <string name="today_streak_never_logged">No workouts logged yet</string>
+
+    <string name="today_action_start_workout">Start Workout</string>
+    <string name="today_action_mark_rest_day">Mark Rest Day</string>
+    <string name="today_action_ad_hoc">Ad-hoc Workout</string>
+    <string name="today_ad_hoc_day_name">Ad-hoc Workout</string>
+
+    <string name="today_resume_banner_text">A workout is in progress</string>
+    <string name="today_resume_banner_action">Resume</string>
+
+    <string name="active_workout_title">Workout in progress</string>
+    <string name="active_workout_placeholder_note">The full active-workout screen (exercise list, set logging, rest timer) lands in a later issue. Finish to log this session.</string>
+    <string name="active_workout_finish">Finish</string>
+
+    <string name="placeholder_coming_soon">Coming soon</string>
 </resources>
