@@ -26,8 +26,15 @@ interface WorkoutDao {
     @Query("SELECT * FROM workout WHERE finishedAt IS NULL LIMIT 1")
     suspend fun getUnfinished(): WorkoutEntity?
 
+    @Query("SELECT * FROM workout WHERE finishedAt IS NULL LIMIT 1")
+    fun observeUnfinished(): Flow<WorkoutEntity?>
+
     @Query("SELECT * FROM workout ORDER BY date DESC, startedAt DESC")
     fun observeAll(): Flow<List<WorkoutEntity>>
+
+    // For the Today screen's streak/gap line: any finished workout, ad-hoc included.
+    @Query("SELECT * FROM workout WHERE finishedAt IS NOT NULL ORDER BY date DESC, startedAt DESC LIMIT 1")
+    fun observeMostRecentFinished(): Flow<WorkoutEntity?>
 
     // Feeds the cycle engine: non-ad-hoc, finished workouts only, in chronological order.
     @Query(
@@ -35,4 +42,10 @@ interface WorkoutDao {
             "ORDER BY date, startedAt",
     )
     suspend fun getCompletedForCycle(): List<WorkoutEntity>
+
+    @Query(
+        "SELECT * FROM workout WHERE programDayId IS NOT NULL AND finishedAt IS NOT NULL " +
+            "ORDER BY date, startedAt",
+    )
+    fun observeCompletedForCycle(): Flow<List<WorkoutEntity>>
 }

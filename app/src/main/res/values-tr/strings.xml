@@ -1,3 +1,38 @@
 <resources>
     <string name="app_name">Vira</string>
+
+    <string name="nav_today">Bugün</string>
+    <string name="nav_history">Geçmiş</string>
+    <string name="nav_exercises">Egzersizler</string>
+    <string name="nav_body">Vücut</string>
+
+    <string name="today_empty_title">Henüz program yok</string>
+    <string name="today_empty_subtitle">Başlamak için bir şablon seç, ya da kendi programını oluştur.</string>
+    <string name="today_template_build_own">Kendi programımı oluştur</string>
+    <string name="template_five_day_split">5 Günlük Split</string>
+    <string name="template_push_pull_legs">Push Pull Legs</string>
+    <string name="template_push_pull_legs_double">PPL x2</string>
+    <string name="template_upper_lower">Üst/Alt</string>
+    <string name="template_full_body_three_day">Tüm Vücut (3 gün)</string>
+    <string name="template_bro_split">Bro Split</string>
+
+    <string name="today_next_day_position">%1$d. gün / %2$d</string>
+    <string name="today_planned_exercise_count">%1$d egzersiz planlandı</string>
+    <string name="today_streak_did_yesterday">Dün %1$s yaptın</string>
+    <string name="today_streak_gap_days">%1$d gündür kayıt yok</string>
+    <string name="today_streak_never_logged">Henüz antrenman kaydı yok</string>
+
+    <string name="today_action_start_workout">Antrenmana Başla</string>
+    <string name="today_action_mark_rest_day">Off Gününü İşaretle</string>
+    <string name="today_action_ad_hoc">Serbest Antrenman</string>
+    <string name="today_ad_hoc_day_name">Serbest Antrenman</string>
+
+    <string name="today_resume_banner_text">Devam eden bir antrenman var</string>
+    <string name="today_resume_banner_action">Devam Et</string>
+
+    <string name="active_workout_title">Antrenman devam ediyor</string>
+    <string name="active_workout_placeholder_note">Tam aktif antrenman ekranı (egzersiz listesi, set kaydı, dinlenme sayacı) sonraki bir issue\'da gelecek. Bu seansı kaydetmek için bitir.</string>
+    <string name="active_workout_finish">Bitir</string>
+
+    <string name="placeholder_coming_soon">Yakında</string>
 </resources>

@@ -20,9 +20,16 @@ class WorkoutRepository @Inject constructor(
 ) {
     fun observeAll(): Flow<List<Workout>> = workoutDao.observeAll().map { it.map(WorkoutEntity::toDomain) }
 
+    fun observeMostRecentFinished(): Flow<Workout?> = workoutDao.observeMostRecentFinished().map { it?.toDomain() }
+
+    fun observeUnfinishedSession(): Flow<Workout?> = workoutDao.observeUnfinished().map { it?.toDomain() }
+
     suspend fun getUnfinished(): Workout? = workoutDao.getUnfinished()?.toDomain()
 
     suspend fun getCompletedForCycle(): List<Workout> = workoutDao.getCompletedForCycle().map { it.toDomain() }
+
+    fun observeCompletedForCycle(): Flow<List<Workout>> =
+        workoutDao.observeCompletedForCycle().map { it.map(WorkoutEntity::toDomain) }
 
     fun observeSetsForWorkout(workoutId: Long): Flow<List<WorkoutSet>> =
         workoutSetDao.observeForWorkout(workoutId).map { it.map(WorkoutSetEntity::toDomain) }
@@ -58,6 +65,26 @@ class WorkoutRepository @Inject constructor(
     suspend fun discardSession(workout: Workout) {
         workoutDao.delete(workout.toEntity())
     }
+
+    // Rest days log instantly, no session screen: started and finished at the same
+    // instant, no sets. Still a real row, so it advances the cycle like any other day.
+    suspend fun logRestDay(
+        programDayId: Long,
+        dayNameSnapshot: String,
+        programNameSnapshot: String?,
+        date: LocalDate,
+        at: Long,
+    ): Long = workoutDao.insert(
+        WorkoutEntity(
+            programDayId = programDayId,
+            dayNameSnapshot = dayNameSnapshot,
+            programNameSnapshot = programNameSnapshot,
+            date = date,
+            startedAt = at,
+            finishedAt = at,
+            note = null,
+        ),
+    )
 
     suspend fun addSet(set: WorkoutSet): Long = workoutSetDao.insert(set.toEntity())
 
