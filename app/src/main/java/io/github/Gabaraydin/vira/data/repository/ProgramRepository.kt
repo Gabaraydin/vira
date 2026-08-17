@@ -27,6 +27,9 @@ class ProgramRepository @Inject constructor(
     fun observeUnarchivedPrograms(): Flow<List<Program>> =
         programDao.observeUnarchived().map { it.map(ProgramEntity::toDomain) }
 
+    fun observeProgram(programId: Long): Flow<Program?> =
+        programDao.observeUnarchived().map { list -> list.firstOrNull { it.id == programId }?.toDomain() }
+
     fun observeDaysForProgram(programId: Long): Flow<List<ProgramDay>> =
         programDayDao.observeForProgram(programId).map { it.map(ProgramDayEntity::toDomain) }
 
@@ -48,6 +51,43 @@ class ProgramRepository @Inject constructor(
         programDao.update(program.copy(archivedAt = archivedAt, isActive = false))
     }
 
+    // Full copy: the program row, every day (same positions), and every day's planned
+    // exercises. The copy is never active — the user opts into that separately.
+    suspend fun duplicateProgram(programId: Long, newName: String, createdAt: Long): Long = database.withTransaction {
+        val sourceDays = programDayDao.getForProgram(programId).sortedBy { it.position }
+        val newProgramId = programDao.insert(
+            ProgramEntity(name = newName, isActive = false, createdAt = createdAt, archivedAt = null),
+        )
+        sourceDays.forEach { sourceDay ->
+            val newDayId = programDayDao.insert(
+                ProgramDayEntity(
+                    programId = newProgramId,
+                    position = sourceDay.position,
+                    name = sourceDay.name,
+                    isRest = sourceDay.isRest,
+                    libraryCategory = sourceDay.libraryCategory,
+                ),
+            )
+            programDayExerciseDao.getForDay(sourceDay.id).forEach { sourceEntry ->
+                programDayExerciseDao.insert(
+                    ProgramDayExerciseEntity(
+                        programDayId = newDayId,
+                        exerciseId = sourceEntry.exerciseId,
+                        position = sourceEntry.position,
+                        supersetGroupId = sourceEntry.supersetGroupId,
+                        supersetOrder = sourceEntry.supersetOrder,
+                        targetSets = sourceEntry.targetSets,
+                        targetRepsMin = sourceEntry.targetRepsMin,
+                        targetRepsMax = sourceEntry.targetRepsMax,
+                        targetWeightKg = sourceEntry.targetWeightKg,
+                        restSecOverride = sourceEntry.restSecOverride,
+                    ),
+                )
+            }
+        }
+        newProgramId
+    }
+
     // Appends at the end, so position stays 0-based and contiguous by construction.
     suspend fun addDay(programId: Long, name: String, isRest: Boolean, libraryCategory: MuscleGroup?): Long {
         val position = programDayDao.getForProgram(programId).size
@@ -60,6 +100,12 @@ class ProgramRepository @Inject constructor(
                 libraryCategory = libraryCategory,
             ),
         )
+    }
+
+    // Renaming, toggling rest, or changing library category — anything that isn't a
+    // position/contiguity change goes through here rather than a dedicated method.
+    suspend fun updateDay(day: ProgramDay) {
+        programDayDao.update(day.toEntity())
     }
 
     // Renumbers every day to its index in orderedDayIds, keeping positions contiguous.

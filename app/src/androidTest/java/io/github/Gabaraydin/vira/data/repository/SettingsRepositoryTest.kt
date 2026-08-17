@@ -52,6 +52,16 @@ class SettingsRepositoryTest {
         assertEquals(false, settings.rpeEnabled)
         assertEquals(true, settings.keepScreenOnDuringSession)
         assertNull(settings.lastBackupExportAt)
+        assertEquals(false, settings.hasSeenProgramSwitchExplanation)
+    }
+
+    @Test
+    fun markingTheProgramSwitchExplanationSeenPersists() = runBlocking {
+        val repository = newRepository()
+
+        repository.markProgramSwitchExplanationSeen()
+
+        assertEquals(true, repository.settings.first().hasSeenProgramSwitchExplanation)
     }
 
     @Test

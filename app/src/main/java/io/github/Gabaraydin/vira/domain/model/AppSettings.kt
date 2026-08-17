@@ -10,4 +10,6 @@ data class AppSettings(
     val keepScreenOnDuringSession: Boolean = true,
     // null means no export has ever been made; the 30-day reminder is computed from this.
     val lastBackupExportAt: Long? = null,
+    // Gates the one-time "history is preserved" explanation shown on the first program switch.
+    val hasSeenProgramSwitchExplanation: Boolean = false,
 )

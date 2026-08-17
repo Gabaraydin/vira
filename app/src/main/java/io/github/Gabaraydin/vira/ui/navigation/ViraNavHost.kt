@@ -1,10 +1,13 @@
 package io.github.Gabaraydin.vira.ui.navigation
 
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -18,6 +21,8 @@ import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
 import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
+import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
+import io.github.Gabaraydin.vira.ui.programeditor.ProgramListRoute
 import io.github.Gabaraydin.vira.ui.today.TodayRoute
 
 private enum class BottomDestination(val route: String, val labelRes: Int) {
@@ -29,7 +34,12 @@ private enum class BottomDestination(val route: String, val labelRes: Int) {
 
 private const val ACTIVE_WORKOUT_ARG = "workoutId"
 private const val ACTIVE_WORKOUT_ROUTE = "active_workout/{$ACTIVE_WORKOUT_ARG}"
+private const val PROGRAM_LIST_ROUTE = "program_list"
+private const val SETTINGS_ROUTE = "settings"
+private const val DAY_EDITOR_ARG = "programId"
+private const val DAY_EDITOR_ROUTE = "day_editor/{$DAY_EDITOR_ARG}"
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ViraNavHost() {
     val navController = rememberNavController()
@@ -37,6 +47,21 @@ fun ViraNavHost() {
     val showBottomBar = BottomDestination.entries.any { it.route == currentRoute }
 
     Scaffold(
+        topBar = {
+            if (showBottomBar) {
+                TopAppBar(
+                    title = {},
+                    actions = {
+                        TextButton(onClick = { navController.navigate(PROGRAM_LIST_ROUTE) }) {
+                            Text(stringResource(R.string.top_bar_program))
+                        }
+                        TextButton(onClick = { navController.navigate(SETTINGS_ROUTE) }) {
+                            Text(stringResource(R.string.top_bar_settings))
+                        }
+                    },
+                )
+            }
+        },
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
@@ -69,12 +94,22 @@ fun ViraNavHost() {
             composable(BottomDestination.HISTORY.route) { ComingSoonScreen() }
             composable(BottomDestination.EXERCISES.route) { ComingSoonScreen() }
             composable(BottomDestination.BODY.route) { ComingSoonScreen() }
+            composable(SETTINGS_ROUTE) { ComingSoonScreen() }
             composable(
                 route = ACTIVE_WORKOUT_ROUTE,
                 arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),
             ) { entry ->
                 val workoutId = entry.arguments?.getLong(ACTIVE_WORKOUT_ARG) ?: return@composable
                 ActiveWorkoutRoute(workoutId = workoutId, onFinished = { navController.popBackStack() })
+            }
+            composable(PROGRAM_LIST_ROUTE) {
+                ProgramListRoute(onOpenDayEditor = { programId -> navController.navigate("day_editor/$programId") })
+            }
+            composable(
+                route = DAY_EDITOR_ROUTE,
+                arguments = listOf(navArgument(DAY_EDITOR_ARG) { type = NavType.LongType }),
+            ) {
+                DayEditorRoute()
             }
         }
     }
