@@ -47,6 +47,7 @@ class ActiveWorkoutViewModel @Inject constructor(
     private var dayName: String = ""
     private var startedAt: Long = 0
     private var defaultRestSeconds: Int = 90
+    private var allExercisesById: Map<Long, Exercise> = emptyMap()
 
     // A weight/reps field only commits on blur; tapping Finish directly out of a still-focused
     // field triggers that blur but doesn't wait for it, so a just-typed value could otherwise
@@ -61,6 +62,7 @@ class ActiveWorkoutViewModel @Inject constructor(
         exerciseRepository.observeAll(),
     ) { sets, planned, settings, exercises ->
         defaultRestSeconds = settings.defaultRestSeconds
+        allExercisesById = exercises.associateBy { it.id }
         RawState(sets, planned, settings.rpeEnabled, settings.keepScreenOnDuringSession, exercises)
     }
         .mapLatest { it.toUiState() }
@@ -177,11 +179,15 @@ class ActiveWorkoutViewModel @Inject constructor(
         }
     }
 
+    // Plan-level override (set for this exercise on this specific day) beats the
+    // exercise's own default (set once in Exercise Detail, applies everywhere it's used)
+    // beats the global default from Settings.
     private fun startRestTimer(model: ActiveSetUiModel) {
-        val restSeconds = plannedExercises.value.orEmpty()
+        val planOverride = plannedExercises.value.orEmpty()
             .firstOrNull { it.exerciseId == model.exerciseId }
             ?.restSecOverride
-            ?: defaultRestSeconds
+        val exerciseDefault = allExercisesById[model.exerciseId]?.defaultRestSec
+        val restSeconds = planOverride ?: exerciseDefault ?: defaultRestSeconds
         val exerciseName = uiState.value.exercises.firstOrNull { it.exerciseId == model.exerciseId }?.exerciseName.orEmpty()
         restTimerController.start(restSeconds, exerciseName)
     }
