@@ -44,6 +44,16 @@
     <string name="active_workout_finish_confirm_body">Bazı loglanan setler henüz tamamlandı olarak işaretlenmedi. Şimdi bitirirsen oldukları gibi kaydedilecekler.</string>
     <string name="active_workout_elapsed_format">%1$02d:%2$02d</string>
 
+    <string name="rest_timer_bar_label">Dinlenme — %1$s</string>
+    <string name="rest_timer_remaining_format">%1$02d:%2$02d</string>
+    <string name="rest_timer_action_skip">Atla</string>
+    <string name="rest_timer_action_minus_15">-15sn</string>
+    <string name="rest_timer_action_plus_15">+15sn</string>
+    <string name="rest_timer_channel_name">Dinlenme sayacı</string>
+    <string name="rest_timer_channel_description">Setler arasında dinlenirken gösterilen geri sayım bildirimi</string>
+    <string name="rest_timer_notification_title">%1$s dinlenmesi</string>
+    <string name="rest_timer_notification_remaining">%1$02d:%2$02d kaldı</string>
+
     <string name="placeholder_coming_soon">Yakında</string>
 
     <string name="top_bar_program">Program</string>

@@ -12,6 +12,8 @@ import io.github.Gabaraydin.vira.domain.model.Exercise
 import io.github.Gabaraydin.vira.domain.model.ProgramDayExercise
 import io.github.Gabaraydin.vira.domain.model.WorkoutSet
 import io.github.Gabaraydin.vira.domain.model.displayName
+import io.github.Gabaraydin.vira.service.resttimer.RestTimerController
+import io.github.Gabaraydin.vira.service.resttimer.RestTimerState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -32,14 +34,18 @@ class ActiveWorkoutViewModel @Inject constructor(
     private val programRepository: ProgramRepository,
     private val exerciseRepository: ExerciseRepository,
     private val settingsRepository: SettingsRepository,
+    private val restTimerController: RestTimerController,
 ) : ViewModel() {
 
     val workoutId: Long = checkNotNull(savedStateHandle["workoutId"])
+
+    val restTimerState: StateFlow<RestTimerState?> = restTimerController.state
 
     private val previousSetsCache = mutableMapOf<Long, List<PreviousSetSummary>>()
     private val plannedExercises = MutableStateFlow<List<ProgramDayExercise>?>(null)
     private var dayName: String = ""
     private var startedAt: Long = 0
+    private var defaultRestSeconds: Int = 90
 
     val uiState: StateFlow<ActiveWorkoutUiState> = combine(
         workoutRepository.observeSetsForWorkout(workoutId),
@@ -47,6 +53,7 @@ class ActiveWorkoutViewModel @Inject constructor(
         settingsRepository.settings,
         exerciseRepository.observeAll(),
     ) { sets, planned, settings, exercises ->
+        defaultRestSeconds = settings.defaultRestSeconds
         RawState(sets, planned, settings.rpeEnabled, settings.keepScreenOnDuringSession, exercises)
     }
         .mapLatest { it.toUiState() }
@@ -106,7 +113,10 @@ class ActiveWorkoutViewModel @Inject constructor(
         val exercise = uiState.value.exercises.firstOrNull { it.exerciseId == exerciseId } ?: return
         val nextSetIndex = (exercise.sets.maxOfOrNull { it.setIndex } ?: 0) + 1
         val nextPosition = (uiState.value.exercises.flatMap { it.sets }.maxOfOrNull { it.position } ?: -1) + 1
+        // Sibling sets are empty for an exercise's very first set, so fall back to the plan's
+        // own grouping rather than reading it off a set that doesn't exist yet.
         val supersetGroupId = exercise.sets.firstOrNull()?.supersetGroupId
+            ?: plannedExercises.value.orEmpty().firstOrNull { it.exerciseId == exerciseId }?.supersetGroupId
         viewModelScope.launch {
             workoutRepository.addSet(
                 WorkoutSet(
@@ -130,9 +140,43 @@ class ActiveWorkoutViewModel @Inject constructor(
 
     fun toggleWarmup(model: ActiveSetUiModel) = update(model) { it.copy(isWarmup = !it.isWarmup) }
 
-    fun toggleCompleted(model: ActiveSetUiModel) = update(model) {
-        val nowCompleted = !it.isCompleted
-        it.copy(isCompleted = nowCompleted, completedAt = if (nowCompleted) System.currentTimeMillis() else null)
+    fun toggleCompleted(model: ActiveSetUiModel) {
+        val nowCompleted = !model.isCompleted
+        val updated = model.toDomain(workoutId)
+            .copy(isCompleted = nowCompleted, completedAt = if (nowCompleted) System.currentTimeMillis() else null)
+        // Warm-up sets don't count as "working sets" for rest purposes, and a superset's rest
+        // only starts once every member's set for this round is done — check with the state
+        // from *before* the update lands, since the just-completed set itself isn't in it yet.
+        val shouldStartRest = nowCompleted && !model.isWarmup && isLastSupersetMemberForRound(model)
+        viewModelScope.launch {
+            workoutRepository.updateSet(updated)
+            if (shouldStartRest) startRestTimer(model)
+        }
+    }
+
+    fun skipRest() = restTimerController.skip()
+
+    fun adjustRest(deltaSeconds: Int) = restTimerController.adjust(deltaSeconds)
+
+    private fun isLastSupersetMemberForRound(model: ActiveSetUiModel): Boolean {
+        val groupId = model.supersetGroupId ?: return true
+        val groupExerciseIds = plannedExercises.value.orEmpty()
+            .filter { it.supersetGroupId == groupId }
+            .map { it.exerciseId }
+        val exercisesById = uiState.value.exercises.associateBy { it.exerciseId }
+        return groupExerciseIds.all { exerciseId ->
+            exerciseId == model.exerciseId ||
+                exercisesById[exerciseId]?.sets.orEmpty().any { it.setIndex == model.setIndex && it.isCompleted }
+        }
+    }
+
+    private fun startRestTimer(model: ActiveSetUiModel) {
+        val restSeconds = plannedExercises.value.orEmpty()
+            .firstOrNull { it.exerciseId == model.exerciseId }
+            ?.restSecOverride
+            ?: defaultRestSeconds
+        val exerciseName = uiState.value.exercises.firstOrNull { it.exerciseId == model.exerciseId }?.exerciseName.orEmpty()
+        restTimerController.start(restSeconds, exerciseName)
     }
 
     private fun update(model: ActiveSetUiModel, transform: (WorkoutSet) -> WorkoutSet) {
