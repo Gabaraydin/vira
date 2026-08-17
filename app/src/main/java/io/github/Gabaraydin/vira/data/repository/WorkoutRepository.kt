@@ -26,6 +26,8 @@ class WorkoutRepository @Inject constructor(
 
     suspend fun getUnfinished(): Workout? = workoutDao.getUnfinished()?.toDomain()
 
+    suspend fun getById(workoutId: Long): Workout? = workoutDao.getById(workoutId)?.toDomain()
+
     suspend fun getCompletedForCycle(): List<Workout> = workoutDao.getCompletedForCycle().map { it.toDomain() }
 
     fun observeCompletedForCycle(): Flow<List<Workout>> =
@@ -94,6 +96,32 @@ class WorkoutRepository @Inject constructor(
 
     suspend fun deleteSet(set: WorkoutSet) {
         workoutSetDao.delete(set.toEntity())
+    }
+
+    // The most recent *other* finished workout that logged this exercise, if any — the
+    // active-workout screen's previous-session reference row.
+    suspend fun getPreviousSessionSets(exerciseId: Long, excludeWorkoutId: Long): List<WorkoutSet> =
+        workoutSetDao.getPreviousSessionSets(exerciseId, excludeWorkoutId).map { it.toDomain() }
+
+    // Appends a single blank set at the end of the session's log, for an exercise that
+    // wasn't planned — "add an unplanned exercise mid-session".
+    suspend fun addUnplannedExercise(workoutId: Long, exerciseId: Long): Long {
+        val nextPosition = (workoutSetDao.getMaxPosition(workoutId) ?: -1) + 1
+        return workoutSetDao.insert(
+            WorkoutSetEntity(
+                workoutId = workoutId,
+                exerciseId = exerciseId,
+                position = nextPosition,
+                setIndex = 1,
+                weightKg = 0.0,
+                reps = 0,
+                rpe = null,
+                isWarmup = false,
+                isCompleted = false,
+                completedAt = null,
+                supersetGroupId = null,
+            ),
+        )
     }
 }
 

@@ -43,6 +43,7 @@ private const val DAY_EDITOR_ROUTE = "day_editor/{$DAY_EDITOR_ARG}"
 private const val DAY_EXERCISES_ARG = "programDayId"
 private const val DAY_EXERCISES_ROUTE = "day_exercises/{$DAY_EXERCISES_ARG}"
 private const val EXERCISE_PICKER_ROUTE = "exercise_picker/{$DAY_EXERCISES_ARG}"
+private const val EXERCISE_PICKER_LOG_ROUTE = "exercise_picker_log/{$ACTIVE_WORKOUT_ARG}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -105,7 +106,11 @@ fun ViraNavHost() {
                 arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),
             ) { entry ->
                 val workoutId = entry.arguments?.getLong(ACTIVE_WORKOUT_ARG) ?: return@composable
-                ActiveWorkoutRoute(workoutId = workoutId, onFinished = { navController.popBackStack() })
+                ActiveWorkoutRoute(
+                    workoutId = workoutId,
+                    onAddExercise = { id -> navController.navigate("exercise_picker_log/$id") },
+                    onFinished = { navController.popBackStack() },
+                )
             }
             composable(PROGRAM_LIST_ROUTE) {
                 ProgramListRoute(onOpenDayEditor = { programId -> navController.navigate("day_editor/$programId") })
@@ -125,6 +130,12 @@ fun ViraNavHost() {
             composable(
                 route = EXERCISE_PICKER_ROUTE,
                 arguments = listOf(navArgument(DAY_EXERCISES_ARG) { type = NavType.LongType }),
+            ) {
+                ExercisePickerRoute(onDone = { navController.popBackStack() })
+            }
+            composable(
+                route = EXERCISE_PICKER_LOG_ROUTE,
+                arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),
             ) {
                 ExercisePickerRoute(onDone = { navController.popBackStack() })
             }

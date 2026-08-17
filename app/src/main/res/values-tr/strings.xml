@@ -30,9 +30,19 @@
     <string name="today_resume_banner_text">Devam eden bir antrenman var</string>
     <string name="today_resume_banner_action">Devam Et</string>
 
-    <string name="active_workout_title">Antrenman devam ediyor</string>
-    <string name="active_workout_placeholder_note">Tam aktif antrenman ekranı (egzersiz listesi, set kaydı, dinlenme sayacı) sonraki bir issue\'da gelecek. Bu seansı kaydetmek için bitir.</string>
     <string name="active_workout_finish">Bitir</string>
+    <string name="active_workout_add_set">Set ekle</string>
+    <string name="active_workout_remove_set">Kaldır</string>
+    <string name="active_workout_add_exercise">Egzersiz ekle</string>
+    <string name="active_workout_weight_label">kg</string>
+    <string name="active_workout_reps_label">Tekrar</string>
+    <string name="active_workout_rpe_label">RPE</string>
+    <string name="active_workout_warmup_label">Isınma</string>
+    <string name="active_workout_previous_empty">Önceki seans yok</string>
+    <string name="active_workout_previous_set_format">%1$s×%2$d</string>
+    <string name="active_workout_finish_confirm_title">Tamamlanmamış setlerle bitirilsin mi?</string>
+    <string name="active_workout_finish_confirm_body">Bazı loglanan setler henüz tamamlandı olarak işaretlenmedi. Şimdi bitirirsen oldukları gibi kaydedilecekler.</string>
+    <string name="active_workout_elapsed_format">%1$02d:%2$02d</string>
 
     <string name="placeholder_coming_soon">Yakında</string>
 
