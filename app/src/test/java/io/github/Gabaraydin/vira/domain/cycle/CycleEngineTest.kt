@@ -143,4 +143,87 @@ class CycleEngineTest {
             computeCycle(dayCount = 2, workouts = listOf(WorkoutForCycle(position = 5, date = DAY1, startedAt = 1)))
         }
     }
+
+    // --- groupCompletedCycles ---
+
+    private fun group(dayCount: Int, workouts: List<WorkoutForCycle>) = groupCompletedCycles(
+        dayCount = dayCount,
+        items = workouts,
+        position = { it.position },
+        date = { it.date },
+        startedAt = { it.startedAt },
+    )
+
+    @Test
+    fun `no workouts groups into no cycles`() {
+        assertEquals(emptyList<Any>(), group(dayCount = 3, workouts = emptyList()))
+    }
+
+    @Test
+    fun `a single full cycle is one group with completed equal to total`() {
+        val workouts = listOf(
+            WorkoutForCycle(position = 0, date = DAY1, startedAt = 1),
+            WorkoutForCycle(position = 1, date = DAY2, startedAt = 1),
+        )
+        val cycles = group(dayCount = 2, workouts = workouts)
+
+        assertEquals(1, cycles.size)
+        assertEquals(0, cycles[0].cycleIndex)
+        assertEquals(2, cycles[0].completedDays)
+        assertEquals(2, cycles[0].totalDays)
+    }
+
+    @Test
+    fun `two cycles are split at the position wrap, oldest first`() {
+        val workouts = listOf(
+            WorkoutForCycle(position = 0, date = LocalDate.of(2026, 1, 1), startedAt = 1),
+            WorkoutForCycle(position = 1, date = LocalDate.of(2026, 1, 2), startedAt = 1),
+            WorkoutForCycle(position = 0, date = LocalDate.of(2026, 1, 8), startedAt = 1),
+        )
+        val cycles = group(dayCount = 2, workouts = workouts)
+
+        assertEquals(2, cycles.size)
+        assertEquals(0, cycles[0].cycleIndex)
+        assertEquals(2, cycles[0].completedDays)
+        assertEquals(1, cycles[1].cycleIndex)
+        assertEquals(1, cycles[1].completedDays)
+    }
+
+    @Test
+    fun `a skipped day still leaves the cycle group with fewer completed than total`() {
+        val workouts = listOf(WorkoutForCycle(position = 0, date = DAY1, startedAt = 1))
+        val cycles = group(dayCount = 3, workouts = workouts)
+
+        assertEquals(1, cycles.size)
+        assertEquals(1, cycles[0].completedDays)
+        assertEquals(3, cycles[0].totalDays)
+    }
+
+    @Test
+    fun `repeating the same position within a cycle only counts once`() {
+        val workouts = listOf(
+            WorkoutForCycle(position = 0, date = LocalDate.of(2026, 1, 1), startedAt = 1),
+            WorkoutForCycle(position = 0, date = LocalDate.of(2026, 1, 2), startedAt = 1),
+        )
+        val cycles = group(dayCount = 3, workouts = workouts)
+
+        // Same position twice in a row means the second one starts a new cycle (p <=
+        // previousPosition), so this is two one-day cycles, not one two-visit cycle.
+        assertEquals(2, cycles.size)
+        assertEquals(1, cycles[0].completedDays)
+        assertEquals(1, cycles[1].completedDays)
+    }
+
+    @Test
+    fun `ad-hoc workouts with no position are excluded from cycle grouping`() {
+        val workouts = listOf(
+            WorkoutForCycle(position = 0, date = DAY1, startedAt = 1),
+            WorkoutForCycle(position = null, date = DAY2, startedAt = 1),
+        )
+        val cycles = group(dayCount = 2, workouts = workouts)
+
+        assertEquals(1, cycles.size)
+        assertEquals(1, cycles[0].completedDays)
+        assertEquals(1, cycles[0].workouts.size)
+    }
 }

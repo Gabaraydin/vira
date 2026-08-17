@@ -67,6 +67,13 @@
     <string name="workout_detail_delete_confirm_title">Bu antrenman silinsin mi?</string>
     <string name="workout_detail_delete_confirm_body">Bu işlem geri alınamaz.</string>
 
+    <string name="history_tab_calendar">Takvim</string>
+    <string name="history_tab_list">Liste</string>
+    <string name="history_cycle_header_format">Döngü %1$d (%2$d/%3$d)</string>
+    <string name="history_empty">Henüz antrenman kaydı yok</string>
+    <string name="history_month_previous">Önceki ay</string>
+    <string name="history_month_next">Sonraki ay</string>
+
     <string name="placeholder_coming_soon">Yakında</string>
 
     <string name="top_bar_program">Program</string>

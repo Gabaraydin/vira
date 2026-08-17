@@ -24,6 +24,7 @@ import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
 import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
 import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
 import io.github.Gabaraydin.vira.ui.programeditor.PlannedExercisesRoute
+import io.github.Gabaraydin.vira.ui.history.HistoryRoute
 import io.github.Gabaraydin.vira.ui.programeditor.ProgramListRoute
 import io.github.Gabaraydin.vira.ui.today.TodayRoute
 import io.github.Gabaraydin.vira.ui.workoutdetail.WorkoutDetailRoute
@@ -101,7 +102,9 @@ fun ViraNavHost() {
             composable(BottomDestination.TODAY.route) {
                 TodayRoute(onNavigateToActiveWorkout = { id -> navController.navigate("active_workout/$id") })
             }
-            composable(BottomDestination.HISTORY.route) { ComingSoonScreen() }
+            composable(BottomDestination.HISTORY.route) {
+                HistoryRoute(onOpenWorkout = { id -> navController.navigate("workout_detail/$id") })
+            }
             composable(BottomDestination.EXERCISES.route) { ComingSoonScreen() }
             composable(BottomDestination.BODY.route) { ComingSoonScreen() }
             composable(SETTINGS_ROUTE) { ComingSoonScreen() }
