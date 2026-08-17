@@ -20,8 +20,10 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
+import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
 import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
 import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
+import io.github.Gabaraydin.vira.ui.programeditor.PlannedExercisesRoute
 import io.github.Gabaraydin.vira.ui.programeditor.ProgramListRoute
 import io.github.Gabaraydin.vira.ui.today.TodayRoute
 
@@ -38,6 +40,9 @@ private const val PROGRAM_LIST_ROUTE = "program_list"
 private const val SETTINGS_ROUTE = "settings"
 private const val DAY_EDITOR_ARG = "programId"
 private const val DAY_EDITOR_ROUTE = "day_editor/{$DAY_EDITOR_ARG}"
+private const val DAY_EXERCISES_ARG = "programDayId"
+private const val DAY_EXERCISES_ROUTE = "day_exercises/{$DAY_EXERCISES_ARG}"
+private const val EXERCISE_PICKER_ROUTE = "exercise_picker/{$DAY_EXERCISES_ARG}"
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,7 +114,19 @@ fun ViraNavHost() {
                 route = DAY_EDITOR_ROUTE,
                 arguments = listOf(navArgument(DAY_EDITOR_ARG) { type = NavType.LongType }),
             ) {
-                DayEditorRoute()
+                DayEditorRoute(onOpenExercises = { dayId -> navController.navigate("day_exercises/$dayId") })
+            }
+            composable(
+                route = DAY_EXERCISES_ROUTE,
+                arguments = listOf(navArgument(DAY_EXERCISES_ARG) { type = NavType.LongType }),
+            ) {
+                PlannedExercisesRoute(onAddExercise = { dayId -> navController.navigate("exercise_picker/$dayId") })
+            }
+            composable(
+                route = EXERCISE_PICKER_ROUTE,
+                arguments = listOf(navArgument(DAY_EXERCISES_ARG) { type = NavType.LongType }),
+            ) {
+                ExercisePickerRoute(onDone = { navController.popBackStack() })
             }
         }
     }
