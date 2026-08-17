@@ -1,5 +1,6 @@
 ﻿package io.github.Gabaraydin.vira.domain.calculations
 
+import io.github.Gabaraydin.vira.domain.model.BiologicalSex
 import kotlin.math.log10
 import kotlin.math.pow
 
@@ -50,4 +51,27 @@ fun bodyMassIndex(weightKg: Double, heightCm: Double): Double {
     require(heightCm > 0) { "heightCm must be positive, was $heightCm" }
     val heightM = heightCm / 100.0
     return weightKg / heightM.pow(2)
+}
+
+enum class BodyFatCategory { ESSENTIAL_FAT, ATHLETES, FITNESS, ACCEPTABLE, OBESE }
+
+// ACE (American Council on Exercise) body fat percentage categories — the same
+// widely-cited bands used by most fitness trackers. Upper bound of each band, per sex;
+// anything above the last one is OBESE.
+private val MALE_CATEGORY_BOUNDS = listOf(
+    5.0 to BodyFatCategory.ESSENTIAL_FAT,
+    13.0 to BodyFatCategory.ATHLETES,
+    17.0 to BodyFatCategory.FITNESS,
+    24.0 to BodyFatCategory.ACCEPTABLE,
+)
+private val FEMALE_CATEGORY_BOUNDS = listOf(
+    13.0 to BodyFatCategory.ESSENTIAL_FAT,
+    20.0 to BodyFatCategory.ATHLETES,
+    24.0 to BodyFatCategory.FITNESS,
+    31.0 to BodyFatCategory.ACCEPTABLE,
+)
+
+fun bodyFatCategory(bodyFatPercent: Double, sex: BiologicalSex): BodyFatCategory {
+    val bounds = if (sex == BiologicalSex.MALE) MALE_CATEGORY_BOUNDS else FEMALE_CATEGORY_BOUNDS
+    return bounds.firstOrNull { bodyFatPercent <= it.first }?.second ?: BodyFatCategory.OBESE
 }

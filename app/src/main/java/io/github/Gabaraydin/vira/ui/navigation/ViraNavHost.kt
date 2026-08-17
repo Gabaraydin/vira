@@ -22,6 +22,7 @@ import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
 import io.github.Gabaraydin.vira.ui.ads.BannerAdView
+import io.github.Gabaraydin.vira.ui.body.BodyRoute
 import io.github.Gabaraydin.vira.ui.exercisedetail.ExerciseDetailRoute
 import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
 import io.github.Gabaraydin.vira.ui.exerciselibrary.ExerciseLibraryRoute
@@ -125,7 +126,7 @@ fun ViraNavHost() {
             ) {
                 ExerciseDetailRoute(onArchived = { navController.popBackStack() })
             }
-            composable(BottomDestination.BODY.route) { ComingSoonScreen() }
+            composable(BottomDestination.BODY.route) { BodyRoute() }
             composable(SETTINGS_ROUTE) { ComingSoonScreen() }
             composable(
                 route = ACTIVE_WORKOUT_ROUTE,

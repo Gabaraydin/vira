@@ -9,6 +9,7 @@ import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import io.github.Gabaraydin.vira.domain.model.AppLanguage
 import io.github.Gabaraydin.vira.domain.model.AppSettings
+import io.github.Gabaraydin.vira.domain.model.BiologicalSex
 import io.github.Gabaraydin.vira.domain.model.ThemeMode
 import io.github.Gabaraydin.vira.domain.model.WeightUnit
 import kotlinx.coroutines.flow.Flow
@@ -25,6 +26,7 @@ private object Keys {
     val KEEP_SCREEN_ON = booleanPreferencesKey("keep_screen_on_during_session")
     val LAST_BACKUP_EXPORT_AT = longPreferencesKey("last_backup_export_at")
     val HAS_SEEN_PROGRAM_SWITCH_EXPLANATION = booleanPreferencesKey("has_seen_program_switch_explanation")
+    val BIOLOGICAL_SEX = stringPreferencesKey("biological_sex")
 }
 
 class SettingsRepository @Inject constructor(private val dataStore: DataStore<Preferences>) {
@@ -42,6 +44,7 @@ class SettingsRepository @Inject constructor(private val dataStore: DataStore<Pr
             lastBackupExportAt = prefs[Keys.LAST_BACKUP_EXPORT_AT],
             hasSeenProgramSwitchExplanation = prefs[Keys.HAS_SEEN_PROGRAM_SWITCH_EXPLANATION]
                 ?: defaults.hasSeenProgramSwitchExplanation,
+            biologicalSex = prefs[Keys.BIOLOGICAL_SEX]?.let { BiologicalSex.valueOf(it) } ?: defaults.biologicalSex,
         )
     }
 
@@ -80,5 +83,9 @@ class SettingsRepository @Inject constructor(private val dataStore: DataStore<Pr
 
     suspend fun markProgramSwitchExplanationSeen() {
         dataStore.edit { it[Keys.HAS_SEEN_PROGRAM_SWITCH_EXPLANATION] = true }
+    }
+
+    suspend fun setBiologicalSex(sex: BiologicalSex) {
+        dataStore.edit { it[Keys.BIOLOGICAL_SEX] = sex.name }
     }
 }
