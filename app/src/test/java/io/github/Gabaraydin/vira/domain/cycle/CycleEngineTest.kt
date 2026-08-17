@@ -29,11 +29,9 @@ class CycleEngineTest {
 
         assertEquals(1, result.cycleIndex)
         assertEquals(0, result.nextPosition)
-        // Nothing is DONE: the cycle that just completed was cleared out.
+        // Nothing is DONE or SKIPPED: the completed cycle is fully cleared, fresh start.
         assertEquals(DayCycleStatus.NEXT, result.days[0].status)
-        // lastPosition (2) is not reset on wrap, per the spec's literal pseudocode, so
-        // position 1 still reads as skipped until the user logs into the new cycle.
-        assertEquals(DayCycleStatus.SKIPPED, result.days[1].status)
+        assertEquals(DayCycleStatus.UPCOMING, result.days[1].status)
         assertEquals(DayCycleStatus.UPCOMING, result.days[2].status)
     }
 

@@ -13,10 +13,7 @@ data class CycleDayState(val position: Int, val status: DayCycleStatus, val work
 
 data class CycleResult(val cycleIndex: Int, val nextPosition: Int, val days: List<CycleDayState>)
 
-// Implements the cycle position algorithm from 01-data-model.md literally, including that
-// lastPosition is NOT reset when a cycle just completed (nextPosition wraps to 0) — only
-// nextPosition and the done-set reset. That leaves positions between the wrapped next (0)
-// and the old lastPosition marked skipped rather than upcoming until the user logs again.
+// Implements the cycle position algorithm from 01-data-model.md.
 fun computeCycle(dayCount: Int, workouts: List<WorkoutForCycle>): CycleResult {
     require(dayCount >= 1) { "dayCount must be at least 1, was $dayCount" }
     workouts.forEach { w ->
@@ -43,12 +40,15 @@ fun computeCycle(dayCount: Int, workouts: List<WorkoutForCycle>): CycleResult {
         previousPosition = p
     }
 
-    val lastPosition = previousPosition
+    var lastPosition = previousPosition
     var nextPosition = lastPosition + 1
     if (nextPosition >= dayCount) {
         nextPosition = 0
         currentCycleDone.clear()
         cycleIndex += 1
+        // The cycle that just completed is gone; nothing should read as skipped in the
+        // fresh one until the user actually misses a day in it.
+        lastPosition = -1
     }
 
     val days = (0 until dayCount).map { position ->
