@@ -74,7 +74,24 @@
     <string name="history_month_previous">Önceki ay</string>
     <string name="history_month_next">Sonraki ay</string>
 
-    <string name="placeholder_coming_soon">Yakında</string>
+    <string name="backup_title">Yedekleme</string>
+    <string name="backup_last_export_format">Son dışa aktarım: %1$s</string>
+    <string name="backup_last_export_never">Henüz dışa aktarım yapılmadı</string>
+    <string name="backup_export_button">Yedeği dışa aktar</string>
+    <string name="backup_import_button">Yedeği içe aktar</string>
+    <string name="backup_import_confirm_title">Tüm yerel veriler değiştirilsin mi?</string>
+    <string name="backup_import_confirm_body">Bu işlem cihazdaki tüm mevcut verileri siler ve seçilen dosyanın içeriğiyle değiştirir. Geri alınamaz.</string>
+    <string name="backup_export_success_title">Dışa aktarım tamamlandı</string>
+    <string name="backup_export_success_body">Yedeğin kaydedildi.</string>
+    <string name="backup_export_failed_title">Dışa aktarım başarısız</string>
+    <string name="backup_export_failed_body">Yedek o konuma yazılamadı. Farklı bir yer dene.</string>
+    <string name="backup_import_success_title">İçe aktarım tamamlandı</string>
+    <string name="backup_import_success_body">Verilerin yedekten geri yüklendi.</string>
+    <string name="backup_import_failed_title">İçe aktarım başarısız</string>
+    <string name="backup_import_failed_invalid_format">Bu dosya geçerli bir Vira yedeği değil.</string>
+    <string name="backup_import_failed_unsupported_version">Bu yedek, Vira\'nın daha yeni bir sürümüyle oluşturulmuş (format %1$d) ve burada içe aktarılamıyor.</string>
+    <string name="backup_import_failed_legacy_not_supported">Eski prototipin dışa aktarım formatını içe aktarmak henüz desteklenmiyor.</string>
+    <string name="backup_import_failed_generic">Dosya okunamadı. Tekrar dene.</string>
 
     <string name="top_bar_program">Program</string>
     <string name="top_bar_settings">Ayarlar</string>

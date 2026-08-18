@@ -74,7 +74,24 @@
     <string name="history_month_previous">Previous month</string>
     <string name="history_month_next">Next month</string>
 
-    <string name="placeholder_coming_soon">Coming soon</string>
+    <string name="backup_title">Backup</string>
+    <string name="backup_last_export_format">Last export: %1$s</string>
+    <string name="backup_last_export_never">No export has been made yet</string>
+    <string name="backup_export_button">Export backup</string>
+    <string name="backup_import_button">Import backup</string>
+    <string name="backup_import_confirm_title">Replace all local data?</string>
+    <string name="backup_import_confirm_body">This deletes everything currently on this device and replaces it with the contents of the selected file. This can\'t be undone.</string>
+    <string name="backup_export_success_title">Export complete</string>
+    <string name="backup_export_success_body">Your backup was saved.</string>
+    <string name="backup_export_failed_title">Export failed</string>
+    <string name="backup_export_failed_body">The backup couldn\'t be written to that location. Try a different one.</string>
+    <string name="backup_import_success_title">Import complete</string>
+    <string name="backup_import_success_body">Your data has been restored from the backup.</string>
+    <string name="backup_import_failed_title">Import failed</string>
+    <string name="backup_import_failed_invalid_format">That file isn\'t a valid Vira backup.</string>
+    <string name="backup_import_failed_unsupported_version">This backup was made by a newer version of Vira (format %1$d) and can\'t be imported here.</string>
+    <string name="backup_import_failed_legacy_not_supported">Importing the old prototype\'s export format isn\'t supported yet.</string>
+    <string name="backup_import_failed_generic">The file couldn\'t be read. Try again.</string>
 
     <string name="top_bar_program">Program</string>
     <string name="top_bar_settings">Settings</string>

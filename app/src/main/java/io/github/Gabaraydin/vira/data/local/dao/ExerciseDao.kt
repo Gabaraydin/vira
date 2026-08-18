@@ -27,6 +27,10 @@ interface ExerciseDao {
     @Query("SELECT * FROM exercise ORDER BY nameEn")
     fun observeAll(): Flow<List<ExerciseEntity>>
 
+    // Full-table read for backup export — order doesn't matter, id order is fine.
+    @Query("SELECT * FROM exercise ORDER BY id")
+    suspend fun getAll(): List<ExerciseEntity>
+
     @Query("SELECT COUNT(*) FROM exercise")
     suspend fun count(): Int
 }

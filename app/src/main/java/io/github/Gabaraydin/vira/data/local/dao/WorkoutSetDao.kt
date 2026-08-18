@@ -19,6 +19,10 @@ interface WorkoutSetDao {
     @Insert
     suspend fun insert(set: WorkoutSetEntity): Long
 
+    // Explicit-PK inserts (backup import).
+    @Insert
+    suspend fun insertAll(sets: List<WorkoutSetEntity>)
+
     @Update
     suspend fun update(set: WorkoutSetEntity)
 
@@ -30,6 +34,10 @@ interface WorkoutSetDao {
 
     @Query("SELECT * FROM workout_set WHERE workoutId = :workoutId ORDER BY position")
     suspend fun getForWorkout(workoutId: Long): List<WorkoutSetEntity>
+
+    // Full-table read for backup export.
+    @Query("SELECT * FROM workout_set ORDER BY id")
+    suspend fun getAll(): List<WorkoutSetEntity>
 
     @Query(
         "SELECT * FROM workout_set WHERE exerciseId = :exerciseId AND isWarmup = 0 " +

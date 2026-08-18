@@ -22,11 +22,11 @@ import androidx.navigation.navArgument
 import io.github.Gabaraydin.vira.R
 import io.github.Gabaraydin.vira.ui.activeworkout.ActiveWorkoutRoute
 import io.github.Gabaraydin.vira.ui.ads.BannerAdView
+import io.github.Gabaraydin.vira.ui.backup.BackupRoute
 import io.github.Gabaraydin.vira.ui.body.BodyRoute
 import io.github.Gabaraydin.vira.ui.exercisedetail.ExerciseDetailRoute
 import io.github.Gabaraydin.vira.ui.exercisepicker.ExercisePickerRoute
 import io.github.Gabaraydin.vira.ui.exerciselibrary.ExerciseLibraryRoute
-import io.github.Gabaraydin.vira.ui.placeholder.ComingSoonScreen
 import io.github.Gabaraydin.vira.ui.programeditor.DayEditorRoute
 import io.github.Gabaraydin.vira.ui.programeditor.PlannedExercisesRoute
 import io.github.Gabaraydin.vira.ui.history.HistoryRoute
@@ -127,7 +127,9 @@ fun ViraNavHost() {
                 ExerciseDetailRoute(onArchived = { navController.popBackStack() })
             }
             composable(BottomDestination.BODY.route) { BodyRoute() }
-            composable(SETTINGS_ROUTE) { ComingSoonScreen() }
+            // Temporary home until the real Settings screen (#22) exists — same pattern the
+            // Body screen used for biological sex before Settings existed.
+            composable(SETTINGS_ROUTE) { BackupRoute() }
             composable(
                 route = ACTIVE_WORKOUT_ROUTE,
                 arguments = listOf(navArgument(ACTIVE_WORKOUT_ARG) { type = NavType.LongType }),

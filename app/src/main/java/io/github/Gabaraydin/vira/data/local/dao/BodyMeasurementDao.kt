@@ -15,6 +15,11 @@ interface BodyMeasurementDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsert(measurement: BodyMeasurementEntity): Long
 
+    // Explicit-PK inserts (backup import) — REPLACE matches upsert's semantics, though in
+    // practice import always runs against a just-cleared table so no conflict occurs.
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(measurements: List<BodyMeasurementEntity>)
+
     @Delete
     suspend fun delete(measurement: BodyMeasurementEntity)
 
@@ -23,4 +28,8 @@ interface BodyMeasurementDao {
 
     @Query("SELECT * FROM body_measurement ORDER BY date DESC")
     fun observeAll(): Flow<List<BodyMeasurementEntity>>
+
+    // Full-table read for backup export.
+    @Query("SELECT * FROM body_measurement ORDER BY id")
+    suspend fun getAll(): List<BodyMeasurementEntity>
 }
