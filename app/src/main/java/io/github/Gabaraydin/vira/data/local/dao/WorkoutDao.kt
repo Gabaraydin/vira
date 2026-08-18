@@ -13,6 +13,10 @@ interface WorkoutDao {
     @Insert
     suspend fun insert(workout: WorkoutEntity): Long
 
+    // Explicit-PK inserts (backup import).
+    @Insert
+    suspend fun insertAll(workouts: List<WorkoutEntity>)
+
     @Update
     suspend fun update(workout: WorkoutEntity)
 
@@ -21,6 +25,10 @@ interface WorkoutDao {
 
     @Query("SELECT * FROM workout WHERE id = :id")
     suspend fun getById(id: Long): WorkoutEntity?
+
+    // Full-table read for backup export — every workout regardless of finished state.
+    @Query("SELECT * FROM workout ORDER BY id")
+    suspend fun getAll(): List<WorkoutEntity>
 
     // At most one row should ever satisfy this; the repository enforces that invariant.
     @Query("SELECT * FROM workout WHERE finishedAt IS NULL LIMIT 1")

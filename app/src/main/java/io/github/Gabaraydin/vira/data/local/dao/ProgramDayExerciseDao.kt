@@ -13,6 +13,10 @@ interface ProgramDayExerciseDao {
     @Insert
     suspend fun insert(entry: ProgramDayExerciseEntity): Long
 
+    // Explicit-PK inserts (backup import).
+    @Insert
+    suspend fun insertAll(entries: List<ProgramDayExerciseEntity>)
+
     @Update
     suspend fun update(entry: ProgramDayExerciseEntity)
 
@@ -27,4 +31,8 @@ interface ProgramDayExerciseDao {
 
     @Query("SELECT * FROM program_day_exercise WHERE id = :id")
     suspend fun getById(id: Long): ProgramDayExerciseEntity?
+
+    // Full-table read for backup export.
+    @Query("SELECT * FROM program_day_exercise ORDER BY id")
+    suspend fun getAll(): List<ProgramDayExerciseEntity>
 }

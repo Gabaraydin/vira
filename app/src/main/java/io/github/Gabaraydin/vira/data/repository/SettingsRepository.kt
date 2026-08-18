@@ -88,4 +88,21 @@ class SettingsRepository @Inject constructor(private val dataStore: DataStore<Pr
     suspend fun setBiologicalSex(sex: BiologicalSex) {
         dataStore.edit { it[Keys.BIOLOGICAL_SEX] = sex.name }
     }
+
+    // Backup import: writes every field of a restored AppSettings in one transaction,
+    // rather than one dataStore.edit{} per field.
+    suspend fun restore(settings: AppSettings) {
+        dataStore.edit { prefs ->
+            prefs[Keys.WEIGHT_UNIT] = settings.weightUnit.name
+            prefs[Keys.THEME_MODE] = settings.themeMode.name
+            prefs[Keys.LANGUAGE] = settings.language.name
+            prefs[Keys.DYNAMIC_COLOR_ENABLED] = settings.dynamicColorEnabled
+            prefs[Keys.DEFAULT_REST_SECONDS] = settings.defaultRestSeconds
+            prefs[Keys.RPE_ENABLED] = settings.rpeEnabled
+            prefs[Keys.KEEP_SCREEN_ON] = settings.keepScreenOnDuringSession
+            prefs[Keys.BIOLOGICAL_SEX] = settings.biologicalSex.name
+            prefs[Keys.HAS_SEEN_PROGRAM_SWITCH_EXPLANATION] = settings.hasSeenProgramSwitchExplanation
+            settings.lastBackupExportAt?.let { prefs[Keys.LAST_BACKUP_EXPORT_AT] = it }
+        }
+    }
 }
